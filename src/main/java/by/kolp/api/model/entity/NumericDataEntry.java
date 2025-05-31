@@ -2,6 +2,7 @@ package by.kolp.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -25,6 +26,7 @@ public class NumericDataEntry {
     @JoinColumn(name = "numeric_data_id")
     private NumericData numericData;
 
+    @CreationTimestamp
     @Builder.Default
     private Instant createdAt = Instant.now();
 

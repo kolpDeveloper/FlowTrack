@@ -16,6 +16,6 @@ public class UserRegistrationDtoFactory {
     public UserRegistrationDTO makeUserRegistrationDto(String username) {
         return UserRegistrationDTO.builder()
                 .username(username)
-                        .build();
+                .build();
     }
 }

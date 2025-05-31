@@ -2,49 +2,32 @@ package by.kolp.api.service;
 
 import by.kolp.api.model.dto.NumericDataEntryDTO;
 import by.kolp.api.model.entity.NumericDataEntry;
-import by.kolp.api.model.entity.NumericData;
 import by.kolp.api.repository.interfaces.NumericDataEntryRepository;
-import by.kolp.api.repository.interfaces.NumericDataRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-
+@Slf4j
 @Service
 public class CalculateService {
+    private final NumericDataEntryRepository numericDataEntryRepository;
+
+    @Autowired
+    public CalculateService(NumericDataEntryRepository numericDataEntryRepository) {
+        this.numericDataEntryRepository = numericDataEntryRepository;
+    }
 
 
-        private final NumericDataRepository numericDataRepository;
+    @Transactional(readOnly = true)
+    public Integer sumAllValues(@Validated NumericDataEntryDTO data) {
 
-        private final NumericDataEntryRepository numericDataEntryRepository;
-
-        @Autowired
-        public CalculateService(NumericDataRepository numericDataRepository, NumericDataEntryRepository numericDataEntryRepository) {
-            this.numericDataRepository = numericDataRepository;
-            this.numericDataEntryRepository = numericDataEntryRepository;
-        }
-
-
-    public Integer sumAllValues(NumericDataEntryDTO data) {
-
-        Integer sum = 0;
-        NumericData newNumericdata = new NumericData();
-        newNumericdata.addEntry(data.key(), data.value());
-
-        numericDataRepository.save(newNumericdata);
-
-        List<NumericDataEntry> AllEntries = numericDataEntryRepository.findAll();
-
-        sum = AllEntries.stream()
-                .mapToInt(NumericDataEntry::getValue)
-                .sum();
-
-        for (NumericDataEntry entry : AllEntries) {
-            if (entry != null) {
-                sum += entry.getValue();
-            }
-        }
-
-        return sum;
+        NumericDataEntry newNumericdataEntry = new NumericDataEntry();
+        newNumericdataEntry.setKey(data.key());
+        newNumericdataEntry.setValue(data.value());
+        numericDataEntryRepository.save(newNumericdataEntry);
+        log.info("saved numericDataEntry : {}", newNumericdataEntry);
+        return numericDataEntryRepository.sumAllValues();
     }
 }

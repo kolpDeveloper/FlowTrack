@@ -16,7 +16,7 @@ public class NumericDataDtoFactory {
         NumericData numericData = entry.getNumericData();
 
         List<NumericDataEntryDTO> entryDtos = numericData.getEntriesList().stream()
-                .map(e -> new NumericDataEntryDTO(e.getKey(), e.getValue(),e.getCreatedAt()))
+                .map(e -> new NumericDataEntryDTO(e.getKey(), e.getValue(), e.getCreatedAt()))
                 .collect(Collectors.toList());
 
         return new NumericDataDTO(numericData.getId(), entryDtos);

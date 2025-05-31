@@ -15,8 +15,8 @@ public class AckDTO {
     private Boolean answer;
 
     public static AckDTO makeDefault(Boolean answer) {
-                    return builder()
-                            .answer(answer)
-                            .build();
-            }
+        return builder()
+                .answer(answer)
+                .build();
+    }
 }

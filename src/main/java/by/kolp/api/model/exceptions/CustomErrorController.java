@@ -28,15 +28,14 @@ public class CustomErrorController implements ErrorController {
     public ResponseEntity<ErrorDto> error(HttpServletRequest request, WebRequest webRequest) {
 
 
-        Map<String,Object> atrributes = errorAttributes.getErrorAttributes(
-                webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.EXCEPTION , ErrorAttributeOptions.Include.MESSAGE)
+        Map<String, Object> atrributes = errorAttributes.getErrorAttributes(
+                webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.EXCEPTION, ErrorAttributeOptions.Include.MESSAGE)
         );
-
 
 
         return ResponseEntity
                 .status((Integer) atrributes
-                .get("status"))
+                        .get("status"))
                 .body(ErrorDto.builder()
                         .error((String) atrributes.get("error"))
                         .errorDescription((String) atrributes.get("message"))

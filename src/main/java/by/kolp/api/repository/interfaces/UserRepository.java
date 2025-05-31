@@ -23,6 +23,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteUserBy(Long id);
 
 
-   @Query("SELECT u FROM User u")
+    @Query("SELECT u FROM User u")
     Stream<User> streamAll();
 }

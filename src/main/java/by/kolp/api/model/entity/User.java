@@ -2,6 +2,8 @@ package by.kolp.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
@@ -36,15 +38,18 @@ public class User {
     private Role role;
 
 
+    @CreationTimestamp
     @Builder.Default
     @Column(nullable = false, name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
 
 
+    @UpdateTimestamp
     @Builder.Default
     @Column(nullable = false, name = "updated_at")
     private Instant updatedAt = Instant.now();
 
+    @UpdateTimestamp
     @Builder.Default
     @Column(nullable = false)
     private Instant lastLoginAt = Instant.now();

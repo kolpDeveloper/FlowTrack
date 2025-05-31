@@ -14,7 +14,7 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleCustomException(Exception ex, WebRequest request) throws Exception {
 
-        log.error("Exception during execution of application ",ex);
+        log.error("Exception during execution of application ", ex);
 
         return handleException(ex, request);
     }
