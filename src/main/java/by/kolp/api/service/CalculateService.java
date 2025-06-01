@@ -27,7 +27,7 @@ public class CalculateService {
         newNumericdataEntry.setKey(data.key());
         newNumericdataEntry.setValue(data.value());
         numericDataEntryRepository.save(newNumericdataEntry);
-        log.info("saved numericDataEntry : {}", newNumericdataEntry);
+        log.info("Saved numericDataEntry : {}", newNumericdataEntry);
         return numericDataEntryRepository.sumAllValues();
     }
 }
