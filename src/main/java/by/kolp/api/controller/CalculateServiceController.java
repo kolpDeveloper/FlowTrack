@@ -1,31 +1,74 @@
 package by.kolp.api.controller;
 
+import by.kolp.api.factories.NumericDataEntryDtoFactory;
+import by.kolp.api.model.dto.AckDTO;
 import by.kolp.api.model.dto.NumericDataEntryDTO;
+import by.kolp.api.model.entity.NumericDataEntry;
+import by.kolp.api.model.exceptions.BadRequestException;
+import by.kolp.api.model.exceptions.NotFoundException;
+import by.kolp.api.repository.interfaces.NumericDataEntryRepository;
 import by.kolp.api.service.CalculateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user/calculate")
-
+@RequestMapping("/api/value/calculate")
 public class CalculateServiceController {
 
     private final CalculateService calculateService;
+    private final NumericDataEntryRepository numericDataEntryRepository;
+    private NumericDataEntryDtoFactory numericDataEntryDtoFactory;
+
+    private static final String CREATE_VALUE = "/api/value/";
+    private static final String DELETE_VALUE = "/api/value/{id}";
+
 
     @Autowired
-    public CalculateServiceController(CalculateService calculateService) {
+    public CalculateServiceController(CalculateService calculateService, NumericDataEntryRepository numericDataEntryRepository) {
         this.calculateService = calculateService;
+        this.numericDataEntryRepository = numericDataEntryRepository;
     }
 
 
+    @PostMapping(CREATE_VALUE)
+    public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
 
+        if (numericDataEntryDTO.value() == null) {
+            throw new BadRequestException("Value is required.");
+        }
+
+        NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
+                NumericDataEntry.builder()
+                        .key(numericDataEntryDTO.key())
+                        .value(numericDataEntryDTO.value())
+                        .build());
+        return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
+    }
+
+    @DeleteMapping(DELETE_VALUE)
+    public AckDTO delete_value(@PathVariable Long id) {
+        NumericDataEntry dataEntry = numericDataEntryRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException(String
+                                .format("This id \"%s%\" doesn't exist", id)));
+        numericDataEntryRepository.delete(dataEntry);
+
+        return new AckDTO("Value successfully deleted",true);
+    }
+
+    /*@PostMapping("/calculateAll")
     public String calculateAll(NumericDataEntryDTO data) {
 
-        Integer result = calculateService.sumAllValues(data);
-        return "redirect:/results";
+        Long result = calculateService.sumAllValues(data);
+        return "redirect:/calculation/"+result;
+    }*/
+
+    @GetMapping("/sum")
+    public Long getTotalSum() {
+        return calculateService.getTotalSum();
     }
 
 }

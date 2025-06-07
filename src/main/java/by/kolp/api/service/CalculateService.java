@@ -19,15 +19,18 @@ public class CalculateService {
         this.numericDataEntryRepository = numericDataEntryRepository;
     }
 
-
-    @Transactional(readOnly = true)
-    public Integer sumAllValues(@Validated NumericDataEntryDTO data) {
+    @Transactional
+    public Long sumAllValues(@Validated NumericDataEntryDTO data) {
 
         NumericDataEntry newNumericdataEntry = new NumericDataEntry();
         newNumericdataEntry.setKey(data.key());
         newNumericdataEntry.setValue(data.value());
         numericDataEntryRepository.save(newNumericdataEntry);
         log.info("Saved numericDataEntry : {}", newNumericdataEntry);
-        return numericDataEntryRepository.sumAllValues();
+        return numericDataEntryRepository.getTotalSum();
+    }
+
+    public Long getTotalSum() {
+        return numericDataEntryRepository.getTotalSum();
     }
 }
