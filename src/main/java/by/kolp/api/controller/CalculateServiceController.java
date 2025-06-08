@@ -14,14 +14,15 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/value/calculate")
+@RequestMapping
+
 public class CalculateServiceController {
 
     private final CalculateService calculateService;
     private final NumericDataEntryRepository numericDataEntryRepository;
-    private NumericDataEntryDtoFactory numericDataEntryDtoFactory;
+    private final NumericDataEntryDtoFactory numericDataEntryDtoFactory;
 
-    private static final String CREATE_VALUE = "/api/value/";
+    private static final String CREATE_VALUE = "/api/value";
     private static final String DELETE_VALUE = "/api/value/{id}";
 
 
@@ -29,23 +30,24 @@ public class CalculateServiceController {
     public CalculateServiceController(CalculateService calculateService, NumericDataEntryRepository numericDataEntryRepository) {
         this.calculateService = calculateService;
         this.numericDataEntryRepository = numericDataEntryRepository;
+        this.numericDataEntryDtoFactory = new NumericDataEntryDtoFactory();
     }
 
 
-    @PostMapping(CREATE_VALUE)
-    public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
+        @PostMapping(CREATE_VALUE)
+        public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
 
-        if (numericDataEntryDTO.value() == null) {
-            throw new BadRequestException("Value is required.");
+            if (numericDataEntryDTO.value() == null) {
+                throw new BadRequestException("Value is required.");
+            }
+
+            NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
+                    NumericDataEntry.builder()
+                            .key(numericDataEntryDTO.key())
+                            .value(numericDataEntryDTO.value())
+                            .build());
+            return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
         }
-
-        NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
-                NumericDataEntry.builder()
-                        .key(numericDataEntryDTO.key())
-                        .value(numericDataEntryDTO.value())
-                        .build());
-        return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
-    }
 
     @DeleteMapping(DELETE_VALUE)
     public AckDTO delete_value(@PathVariable Long id) {
@@ -53,21 +55,16 @@ public class CalculateServiceController {
                 .findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(String
-                                .format("This id \"%s%\" doesn't exist", id)));
+                                .format("This id \"%s%%\" doesn't exist", id)));
         numericDataEntryRepository.delete(dataEntry);
 
         return new AckDTO("Value successfully deleted",true);
     }
 
-    /*@PostMapping("/calculateAll")
-    public String calculateAll(NumericDataEntryDTO data) {
 
-        Long result = calculateService.sumAllValues(data);
-        return "redirect:/calculation/"+result;
-    }*/
-
-    @GetMapping("/sum")
+    @GetMapping("/api/value/sum")
     public Long getTotalSum() {
+        log.info("Getting total sum");
         return calculateService.getTotalSum();
     }
 

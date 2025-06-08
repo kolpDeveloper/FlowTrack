@@ -46,7 +46,7 @@ public class UserController {
                 .findById(userId)
                 .orElseThrow(() ->
                         new NotFoundException(String
-                                .format("User \"%s%\" doesn't exist", userId)));
+                                .format("User \"%s%%\" doesn't exist", userId)));
 
 
         userRepository.deleteUserBy(user.getId());
@@ -108,7 +108,7 @@ public class UserController {
                 .findById(userId)
                 .orElseThrow(() ->
                         new NotFoundException(String
-                                .format("User \"%s%\" doesn't exist", userId)));
+                                .format("User \"%s%%\" doesn't exist", userId)));
 
         userRepository.findByUsername(user.getUsername())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), userId))
