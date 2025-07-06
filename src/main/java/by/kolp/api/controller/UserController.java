@@ -4,9 +4,12 @@ import by.kolp.api.factories.UserRegistrationDtoFactory;
 import by.kolp.api.model.dto.AckDTO;
 import by.kolp.api.model.dto.UserCreatingRequestDTO;
 import by.kolp.api.model.dto.UserRegistrationDTO;
+import by.kolp.api.model.entity.Role;
 import by.kolp.api.model.entity.User;
+import by.kolp.api.model.enums.RoleName;
 import by.kolp.api.model.exceptions.BadRequestException;
 import by.kolp.api.model.exceptions.NotFoundException;
+import by.kolp.api.repository.interfaces.RoleRepository;
 import by.kolp.api.repository.interfaces.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -21,6 +24,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
@@ -30,8 +35,7 @@ public class UserController {
 
 
     final UserRepository userRepository;
-
-
+    final RoleRepository roleRepository;
     final UserRegistrationDtoFactory userRegistrationDtoFactory;
 
     public static final String CREATE_USER = "/api/user";
@@ -45,8 +49,7 @@ public class UserController {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() ->
-                        new NotFoundException(String
-                                .format("User \"%s%%\" doesn't exist", userId)));
+                        new NotFoundException(format("User \"%s\" doesn't exist", userId)));
 
 
         userRepository.deleteUserBy(user.getId());
@@ -81,14 +84,21 @@ public class UserController {
                 .findByUsername(request.getUsername())
                 .ifPresent(
                         user -> {
-                            throw new BadRequestException(String.format("User \"%s\" already exists.", request.getUsername()));
+                            throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
                         });
+
+
+
+
+        Role defaultRole = GetOrCreateDefaultRole();
+
 
         User newUser = userRepository.saveAndFlush(
                 User.builder()
                         .username(request.getUsername())
                         .email(request.getEmail())
                         .password(request.getPassword())
+                        .role(defaultRole)
                         .build()
         );
 
@@ -107,20 +117,26 @@ public class UserController {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() ->
-                        new NotFoundException(String
-                                .format("User \"%s%%\" doesn't exist", userId)));
+                        new NotFoundException(format("User \"%s\" doesn't exist", userId)));
 
         userRepository.findByUsername(user.getUsername())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), userId))
                 .ifPresent(anotherUser -> {
-                    throw new BadRequestException(String.format("User \"%s\" already exists.", request.getUsername()));
-
-
+                    throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
                 });
 
 
         user.setUsername(request.getUsername());
         user = userRepository.saveAndFlush(user);
         return userRegistrationDtoFactory.makeUserRegistrationDto(user);
+    }
+
+    Role GetOrCreateDefaultRole() {
+        return roleRepository.findByName(RoleName.valueOf(RoleName.ROLE_USER.name()))
+                .orElseGet(() -> {
+                    Role defaultRole = new Role();
+                    defaultRole.setName(RoleName.ROLE_USER);
+                    return roleRepository.save(defaultRole);
+                });
     }
 }

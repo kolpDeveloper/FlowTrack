@@ -1,0 +1,42 @@
+package by.kolp.api.util;
+
+import by.kolp.api.model.entity.User;
+import by.kolp.api.service.UsersDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+@Component
+public class UserValidator implements Validator {
+
+    private final UsersDetailService userDetailService;
+
+    @Autowired
+    public UserValidator(UsersDetailService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return User.class.equals(clazz);
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+
+        User user = (User) target;
+
+        try {
+            userDetailService.loadUserByUsername(user.getUsername());
+        }catch(UsernameNotFoundException ignored) {
+            return;
+        }
+
+        errors.rejectValue("username", "", "Username not found");
+    }
+
+    
+}

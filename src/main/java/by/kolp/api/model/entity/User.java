@@ -1,5 +1,6 @@
 package by.kolp.api.model.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +16,8 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "username")
 })
 public class User {
 
@@ -33,10 +35,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
-
 
     @CreationTimestamp
     @Builder.Default
@@ -53,6 +54,4 @@ public class User {
     @Builder.Default
     @Column(nullable = false)
     private Instant lastLoginAt = Instant.now();
-
-
 }

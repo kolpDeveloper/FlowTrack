@@ -2,6 +2,7 @@ package by.kolp.api.factories;
 
 import by.kolp.api.model.dto.NumericDataEntryDTO;
 import by.kolp.api.model.entity.NumericDataEntry;
+import by.kolp.api.model.enums.RoleName;
 
 
 public class NumericDataEntryDtoFactory {
@@ -10,7 +11,8 @@ public class NumericDataEntryDtoFactory {
         return new NumericDataEntryDTO(
                 entry.getKey(),
                 entry.getValue(),
-                entry.getCreatedAt()
+                entry.getCreatedAt(),
+                RoleName.ROLE_USER
         );
     }
 }

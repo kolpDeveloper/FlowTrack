@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,18 +29,17 @@ public class CustomErrorController implements ErrorController {
     public ResponseEntity<ErrorDto> error(HttpServletRequest request, WebRequest webRequest) {
 
 
-        Map<String, Object> atrributes = errorAttributes.getErrorAttributes(
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(
                 webRequest, ErrorAttributeOptions.of(ErrorAttributeOptions.Include.EXCEPTION, ErrorAttributeOptions.Include.MESSAGE)
         );
 
 
-        return ResponseEntity
-                .status((Integer) atrributes
-                        .get("status"))
-                .body(ErrorDto.builder()
-                        .error((String) atrributes.get("error"))
-                        .errorDescription((String) atrributes.get("message"))
-                        .build());
+            return ResponseEntity
+                    .status(attributes.get("status") !=null ? (Integer) attributes.get("status") : 500 )
+                    .body(ErrorDto.builder()
+                            .error((String) attributes.get("error"))
+                            .errorDescription((String) attributes.get("message"))
+                            .build());
     }
     //todo .status throws nullpointer exception
 }

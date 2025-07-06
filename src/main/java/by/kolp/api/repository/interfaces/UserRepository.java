@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    Optional<User> findById(Long integer);
+    Optional<User> findById(Long id);
 
     Stream<User> streamAllByUsernameStartingWithIgnoreCase(String username);
 
@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u")
     Stream<User> streamAll();
+
+    boolean existsUserByUsername(String username);
 }
