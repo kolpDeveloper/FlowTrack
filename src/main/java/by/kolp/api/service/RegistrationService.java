@@ -5,6 +5,7 @@ import by.kolp.api.model.entity.Role;
 import by.kolp.api.model.entity.User;
 import by.kolp.api.repository.interfaces.RoleRepository;
 import by.kolp.api.repository.interfaces.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+
     private Role defaultUserRole;
     private Role adminRole;
 
@@ -37,24 +39,30 @@ public class RegistrationService {
         return userRepository.save(user);
     }
 
-
-
-    private void initialize(){
+    @PostConstruct
+    private void initialize() {
         this.defaultUserRole = roleRepository.findByName(ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Default user role not found"));
-        this.adminRole = roleRepository.findByName(ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Admin role not found"));
-    }
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName(ROLE_USER);
+                    return roleRepository.save(newRole);
+                });
 
+        this.adminRole = roleRepository.findByName(ROLE_ADMIN)
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName(ROLE_ADMIN);
+                    return roleRepository.save(newRole);
+                });
+    }
 
     @Transactional
     public User registerUser(User user) {
         return register(user, false);
     }
 
-    @Transactional
+    /*@Transactional
     public User registerAdmin(User user) {
        return register(user, true);
-    }
+    }*/
 }
-

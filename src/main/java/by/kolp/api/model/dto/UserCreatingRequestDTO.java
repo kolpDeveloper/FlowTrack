@@ -1,6 +1,5 @@
 package by.kolp.api.model.dto;
 
-import by.kolp.api.model.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,4 @@ public class UserCreatingRequestDTO {
 
     @NotEmpty(message = "Password cannot be empty")
     private String password;
-
-    @NotEmpty
-    private Role role;
 }

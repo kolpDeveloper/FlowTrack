@@ -11,11 +11,13 @@ import by.kolp.api.model.exceptions.BadRequestException;
 import by.kolp.api.model.exceptions.NotFoundException;
 import by.kolp.api.repository.interfaces.RoleRepository;
 import by.kolp.api.repository.interfaces.UserRepository;
+import by.kolp.api.service.RegistrationService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +38,9 @@ public class UserController {
 
     final UserRepository userRepository;
     final RoleRepository roleRepository;
+    final RegistrationService registrationService;
     final UserRegistrationDtoFactory userRegistrationDtoFactory;
+    final PasswordEncoder passwordEncoder;
 
     public static final String CREATE_USER = "/api/user";
     public static final String EDIT_USER = "/api/user/{user_id}";
@@ -93,14 +97,15 @@ public class UserController {
         Role defaultRole = GetOrCreateDefaultRole();
 
 
-        User newUser = userRepository.saveAndFlush(
-                User.builder()
+        User newUser = User.builder()
                         .username(request.getUsername())
                         .email(request.getEmail())
-                        .password(request.getPassword())
+                        .password(passwordEncoder.encode(request.getPassword()))
                         .role(defaultRole)
-                        .build()
-        );
+                        .build();
+
+        User savedUser = registrationService.registerUser(newUser);
+
 
         return userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
     }
