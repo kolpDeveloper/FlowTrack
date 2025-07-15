@@ -33,10 +33,10 @@ public class RegistrationService {
     }
 
     @Transactional
-    public User register(User user, boolean isAdmin) {
+    public void register(User user, boolean isAdmin) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(isAdmin ? adminRole : defaultUserRole);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @PostConstruct
@@ -57,8 +57,8 @@ public class RegistrationService {
     }
 
     @Transactional
-    public User registerUser(User user) {
-        return register(user, false);
+    public void registerUser(User user) {
+        register(user, false);
     }
 
     /*@Transactional

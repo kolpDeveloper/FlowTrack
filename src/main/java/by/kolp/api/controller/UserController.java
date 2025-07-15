@@ -38,7 +38,6 @@ public class UserController {
 
     final UserRepository userRepository;
     final RoleRepository roleRepository;
-    final RegistrationService registrationService;
     final UserRegistrationDtoFactory userRegistrationDtoFactory;
     final PasswordEncoder passwordEncoder;
 
@@ -104,7 +103,6 @@ public class UserController {
                         .role(defaultRole)
                         .build();
 
-        User savedUser = registrationService.registerUser(newUser);
 
 
         return userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
