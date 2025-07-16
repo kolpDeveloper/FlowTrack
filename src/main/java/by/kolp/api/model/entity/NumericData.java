@@ -20,7 +20,13 @@ import java.util.List;
 public class NumericData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    generator = "numeric_data_seq_gen")
+    @SequenceGenerator(
+            name = "numeric_data_seq_gen",
+            sequenceName = "numeric_data_seq",
+            allocationSize = 1
+    )
     private Long id;
 
     @OneToMany(mappedBy = "numericData", cascade = CascadeType.ALL, orphanRemoval = true)

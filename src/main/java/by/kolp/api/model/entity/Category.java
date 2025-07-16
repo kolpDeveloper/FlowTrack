@@ -15,10 +15,17 @@ import java.time.Instant;
 @Table(name = "category", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")
 })
+
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    generator = "category_seq_gen")
+    @SequenceGenerator(
+            name = "category_seq_gen",
+            sequenceName = "category_seq",
+            allocationSize = 1
+    )
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 100)

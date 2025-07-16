@@ -16,7 +16,13 @@ import java.time.Instant;
 public class NumericDataEntry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "numeric_data_entry_seq_gen")
+    @SequenceGenerator(
+            name = "numeric_data_entry_seq_gen",
+            sequenceName = "numeric_data_entry_seq",
+            allocationSize = 1
+    )
     private Long id;
 
     private String key;

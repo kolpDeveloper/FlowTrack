@@ -13,7 +13,13 @@ import java.util.List;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "role_seq_gen")
+    @SequenceGenerator(
+            name = "role_seq_gen",
+            sequenceName = "role_seq",
+            allocationSize = 1
+    )
     private Integer id;
 
     @Enumerated(EnumType.STRING)
