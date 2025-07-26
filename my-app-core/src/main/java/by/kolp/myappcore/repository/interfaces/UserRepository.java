@@ -26,5 +26,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Stream<User> streamAll();
 
-    boolean existsUserByUsername(String username);
+    boolean existsUserById(Long id);
+
+
 }

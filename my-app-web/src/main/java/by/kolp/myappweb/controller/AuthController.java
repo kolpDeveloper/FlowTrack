@@ -41,7 +41,7 @@ public class AuthController {
         userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return Map.of("ERROR","This value already exists");
+            return Map.of("ERROR", "This value already exists");
         }
 
         registrationService.registerUser(user);

@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +16,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JWTUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -34,18 +35,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authorizationHeader.substring(7);
-        username = jwtService.extractUsername(jwt);
+        try {
+            username = jwtUtil.validateToken(jwt);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails UDetails = userDetailsService.loadUserByUsername(username);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails UDetails = userDetailsService.loadUserByUsername(username);
 
-
-            if (jwtService.isTokenValid(jwt, UDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(UDetails, null, UDetails.getAuthorities());
 
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+                log.debug("User {} successfully authenticated", username);
             }
+        } catch (Exception e) {
+            log.error("Some problems with JWT: ", e);
         }
         filterChain.doFilter(request, response);
     }

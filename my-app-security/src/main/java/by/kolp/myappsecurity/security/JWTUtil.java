@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,12 @@ public class JWTUtil {
     @Value("${jwt_secret}")
     private String secret;
 
+    UsersDetails usersDetails;
+
     public String generateToken(String username) {
         Date expiredDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
         return JWT.create()
-                .withSubject("User details")
-                .withClaim("Username:", username)
+                .withSubject(username)
                 .withIssuedAt(Instant.now())
                 .withIssuer("kolp")
                 .withExpiresAt(expiredDate)
@@ -32,13 +34,10 @@ public class JWTUtil {
 
     public String validateToken(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-                .withSubject("User details")
                 .withIssuer("kolp")
                 .build();
 
         DecodedJWT decode = verifier.verify(token);
-        return decode.getClaim("Username").asString();
-
+        return decode.getSubject();
     }
-
 }

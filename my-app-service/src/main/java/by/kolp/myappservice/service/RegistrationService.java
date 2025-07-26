@@ -39,9 +39,9 @@ public class RegistrationService {
         userRepository.save(user);
     }
 
-    @PostConstruct
+    /*@PostConstruct
     private void initialize() {
-        this.defaultUserRole = roleRepository.findByName(ROLE_USER)
+        this.defaultUserRole = roleRepository.findByName()
                 .orElseGet(() -> {
                     Role newRole = new Role();
                     newRole.setName(ROLE_USER);
@@ -54,7 +54,7 @@ public class RegistrationService {
                     newRole.setName(ROLE_ADMIN);
                     return roleRepository.save(newRole);
                 });
-    }
+    }*/
 
     @Transactional
     public void registerUser(User user) {

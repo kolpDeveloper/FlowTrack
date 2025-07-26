@@ -1,6 +1,5 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappweb.factories.UserRegistrationDtoFactory;
 import by.kolp.myappcore.model.dto.AckDTO;
 import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
 import by.kolp.myappcore.model.dto.UserRegistrationDTO;
@@ -11,7 +10,7 @@ import by.kolp.myappcore.model.exceptions.BadRequestException;
 import by.kolp.myappcore.model.exceptions.NotFoundException;
 import by.kolp.myappcore.repository.interfaces.RoleRepository;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
-import jakarta.transaction.Transactional;
+import by.kolp.myappweb.factories.UserRegistrationDtoFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,22 +27,23 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequestMapping("/api")
 @RestController
 public class UserController {
 
 
     UserRepository userRepository;
-    RoleRepository roleRepository;
     UserRegistrationDtoFactory userRegistrationDtoFactory;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
-    public static final String CREATE_USER = "/api/user";
-    public static final String EDIT_USER = "/api/user/{user_id}";
-    public static final String FETCH_USERS = "/api/user";
-    public static final String DELETE_USER = "/api/user/{user_id}";
+
+    public static final String CREATE_USER = "/user";
+    public static final String EDIT_USER = "/user/{user_id}";
+    public static final String FETCH_USERS = "/user";
+    public static final String DELETE_USER = "/user/{user_id}";
 
 
     @DeleteMapping(value = DELETE_USER)
@@ -68,9 +68,10 @@ public class UserController {
                 .map(userRepository::streamAllByUsernameStartingWithIgnoreCase)
                 .findAny().orElseGet(userRepository::streamAll);
 
-
         return users
-                .map(userRegistrationDtoFactory::makeUserRegistrationDto)
+                .map(user -> {
+                    return userRegistrationDtoFactory.makeUserRegistrationDto(user);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -89,17 +90,16 @@ public class UserController {
                             throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
                         });
 
-
-        Role defaultRole = GetOrCreateDefaultRole();
-
+        Role defaultRole = getOrCreateDefaultRole();
 
         User newUser = User.builder()
-                        .username(request.getUsername())
-                        .email(request.getEmail())
-                        .password(passwordEncoder.encode(request.getPassword()))
-                        .role(defaultRole)
-                        .build();
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(defaultRole)
+                .build();
 
+        newUser = userRepository.save(newUser);
 
 
         return userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
@@ -108,7 +108,6 @@ public class UserController {
     @PatchMapping(EDIT_USER)
     public UserRegistrationDTO editUsername(@PathVariable("user_id") Long userId,
                                             @RequestBody UserCreatingRequestDTO request) {
-
 
         if (request.getUsername().trim().isEmpty()) {
             throw new BadRequestException("Username cannot be empty");
@@ -119,20 +118,20 @@ public class UserController {
                 .orElseThrow(() ->
                         new NotFoundException(format("User \"%s\" doesn't exist", userId)));
 
-        userRepository.findByUsername(user.getUsername())
+        userRepository.findByUsername(request.getUsername())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), userId))
                 .ifPresent(anotherUser -> {
                     throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
                 });
 
-
         user.setUsername(request.getUsername());
         user = userRepository.saveAndFlush(user);
+
         return userRegistrationDtoFactory.makeUserRegistrationDto(user);
     }
 
-    Role GetOrCreateDefaultRole() {
-        return roleRepository.findByName(RoleName.valueOf(RoleName.ROLE_USER.name()))
+    private Role getOrCreateDefaultRole() {
+        return roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseGet(() -> {
                     Role defaultRole = new Role();
                     defaultRole.setName(RoleName.ROLE_USER);
