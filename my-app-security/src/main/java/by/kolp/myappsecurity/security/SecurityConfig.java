@@ -3,6 +3,7 @@ package by.kolp.myappsecurity.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,8 +25,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/**").permitAll()
-                        .requestMatchers("/auth/**","/api/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/user").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/error").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -33,12 +33,11 @@ public class CustomErrorController implements ErrorController {
         );
 
 
-            return ResponseEntity
-                    .status(attributes.get("status") !=null ? (Integer) attributes.get("status") : 500 )
-                    .body(by.kolp.myappcore.model.exceptions.ErrorDto.builder()
-                            .error((String) attributes.get("error"))
-                            .errorDescription((String) attributes.get("message"))
-                            .build());
+        return ResponseEntity
+                .status(attributes.get("status") != null ? (Integer) attributes.get("status") : 500)
+                .body(by.kolp.myappcore.model.exceptions.ErrorDto.builder()
+                        .error((String) attributes.get("error"))
+                        .errorDescription((String) attributes.get("message"))
+                        .build());
     }
-    //todo .status throws nullpointer exception
 }

@@ -54,7 +54,7 @@ public class UserController {
                         new NotFoundException(format("User \"%s\" doesn't exist", userId)));
 
 
-        userRepository.deleteUserBy(user.getId());
+        userRepository.deleteById(user.getId());
         return new AckDTO("User successfully deleted", true);
     }
 
@@ -63,15 +63,12 @@ public class UserController {
 
         optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.trim().isEmpty());
 
-
         Stream<User> users = optionalPrefixName.stream()
                 .map(userRepository::streamAllByUsernameStartingWithIgnoreCase)
                 .findAny().orElseGet(userRepository::streamAll);
 
         return users
-                .map(user -> {
-                    return userRegistrationDtoFactory.makeUserRegistrationDto(user);
-                })
+                .map(userRegistrationDtoFactory::makeUserRegistrationDto)
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +97,6 @@ public class UserController {
                 .build();
 
         newUser = userRepository.save(newUser);
-
 
         return userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
     }
