@@ -8,9 +8,9 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>by.kolp</groupId>
+
     <artifactId>my-app-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+
     <name>my-app-starter</name>
     <description>my-app-starter</description>
 
@@ -37,21 +37,14 @@
         <dependency>
             <groupId>by.kolp</groupId>
             <artifactId>my-app-security</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>by.kolp</groupId>
+            <artifactId>my-app-producer</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>3.5.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <version>3.5.3</version>
-        </dependency>
 
 
         <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-plugin-api -->
@@ -60,11 +53,7 @@
             <artifactId>maven-plugin-api</artifactId>
             <version>3.9.10</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>3.5.3</version>
-        </dependency>
+
     </dependencies>
 
     <build>

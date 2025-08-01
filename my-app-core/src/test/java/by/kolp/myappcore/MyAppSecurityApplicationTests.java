@@ -2,11 +2,15 @@ package by.kolp.myappcore;
 
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootTest()
+@SpringBootApplication(scanBasePackages = {
+        //"by.kolp.myappweb",
+        //"by.kolp.myappservice",
+        "by.kolp.myappcore"
+       // "by.kolp.myappsecurity"
+})
 public class MyAppSecurityApplicationTests {
-
 
     @Test
     void contextLoads() {

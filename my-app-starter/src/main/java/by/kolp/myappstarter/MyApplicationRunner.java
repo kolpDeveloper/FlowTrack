@@ -11,12 +11,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappcore",
         "by.kolp.myappsecurity",
         "by.kolp.myappservice",
-        "by.kolp.myappweb"
-})
+        "by.kolp.myappweb",
+        "by.kolp.myappproducer"
+        })
 @EntityScan(basePackages = "by.kolp.myappcore.model.entity")
 @EnableJpaRepositories(basePackages = "by.kolp.myappcore.repository.interfaces")
 @SpringBootApplication
-
 public class MyApplicationRunner {
     public static void main(String[] args) {
         SpringApplication.run(MyApplicationRunner.class);
