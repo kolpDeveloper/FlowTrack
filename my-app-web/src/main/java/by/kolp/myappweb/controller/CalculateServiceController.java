@@ -34,20 +34,20 @@ public class CalculateServiceController {
     }
 
 
-        @PostMapping(CREATE_VALUE)
-        public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
+    @PostMapping(CREATE_VALUE)
+    public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
 
-            if (numericDataEntryDTO.value() == null) {
-                throw new BadRequestException("Value is required.");
-            }
-
-            NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
-                    NumericDataEntry.builder()
-                            .key(numericDataEntryDTO.key())
-                            .value(numericDataEntryDTO.value())
-                            .build());
-            return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
+        if (numericDataEntryDTO.value() == null) {
+            throw new BadRequestException("Value is required.");
         }
+
+        NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
+                NumericDataEntry.builder()
+                        .key(numericDataEntryDTO.key())
+                        .value(numericDataEntryDTO.value())
+                        .build());
+        return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
+    }
 
     @DeleteMapping(DELETE_VALUE)
     public AckDTO delete_value(@PathVariable Long id) {
@@ -58,13 +58,13 @@ public class CalculateServiceController {
                                 .format("This id \"%s%%\" doesn't exist", id)));
         numericDataEntryRepository.delete(dataEntry);
 
-        return new AckDTO("Value successfully deleted",true);
+        return new AckDTO("Value successfully deleted", true);
     }
 
 
     @GetMapping("/api/value/sum")
     public Long getTotalSum() {
-        //log.info("Getting total sum");
+        log.info("Getting total sum");
         return calculateService.getTotalSum();
     }
 

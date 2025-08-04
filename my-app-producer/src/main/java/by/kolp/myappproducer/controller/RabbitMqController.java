@@ -25,4 +25,15 @@ public class RabbitMqController {
         messageService.send(message);
         return ResponseEntity.status(200).build();
     }
+
+    
+    @PostMapping("/send/delay")
+    public ResponseEntity<?> sendWithDelay(@RequestBody String message) {
+        if(message.isBlank()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        messageService.sendWithDelay(message);
+        return ResponseEntity.status(200).build();
+    }
 }

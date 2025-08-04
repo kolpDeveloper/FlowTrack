@@ -13,9 +13,17 @@ public class MessageService {
     @Value("${rabbitmq.queue.name}")
     private String queueName;
 
+    @Value("${rabbitmq.queue_with_delay.name}")
+    private String queueWithDelay;
+
     private final AmqpTemplate amqpTemplate;
 
     public void send(String message) {
         amqpTemplate.convertAndSend(queueName, message);
     }
+
+    public void sendWithDelay(String message) {
+        amqpTemplate.convertAndSend(queueWithDelay, message);
+    }
+
 }
