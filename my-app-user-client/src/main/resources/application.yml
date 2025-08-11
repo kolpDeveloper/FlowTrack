@@ -1,0 +1,4 @@
+spring.application.name: my-app-user-client
+
+user-service:
+  base-url: http://127.0.0.1:9128/api/users/{id}
