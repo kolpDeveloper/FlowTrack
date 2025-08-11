@@ -16,6 +16,9 @@
         <module>my-app-starter</module>
         <module>my-app-web</module>
         <module>my-app-producer</module>
+        <module>my-app-user-client</module>
+        <module>my-app-data-api</module>
+        <module>my-app-service-impl</module>
     </modules>
 
     <properties>

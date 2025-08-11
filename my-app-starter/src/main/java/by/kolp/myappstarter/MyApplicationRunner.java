@@ -12,7 +12,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappsecurity",
         "by.kolp.myappservice",
         "by.kolp.myappweb",
-        "by.kolp.myappproducer"
+        "by.kolp.myappproducer",
+        "by.kolp.client",
+        "by.kolp.myappdataapi",
+        "by.kolp.client",
+        "by.kolp.myappserviceimpl"
         })
 @EntityScan(basePackages = "by.kolp.myappcore.model.entity")
 @EnableJpaRepositories(basePackages = "by.kolp.myappcore.repository.interfaces")
