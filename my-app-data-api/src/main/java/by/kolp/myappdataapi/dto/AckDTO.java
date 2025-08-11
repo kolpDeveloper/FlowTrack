@@ -1,4 +1,5 @@
-package by.kolp.myappcore.model.dto;
+package by.kolp.myappdataapi.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

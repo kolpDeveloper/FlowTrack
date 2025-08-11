@@ -14,7 +14,6 @@ public interface NumericDataEntryRepository extends JpaRepository<NumericDataEnt
     @Query("SELECT SUM(e.value) from NumericDataEntry e")
     Long getTotalSum();
 
-
     Optional<NumericDataEntry> findById(@NonNull Long id);
 
 }

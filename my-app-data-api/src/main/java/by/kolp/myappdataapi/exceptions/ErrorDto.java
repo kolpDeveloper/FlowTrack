@@ -1,4 +1,4 @@
-package by.kolp.myappcore.model.exceptions;
+package by.kolp.myappdataapi.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

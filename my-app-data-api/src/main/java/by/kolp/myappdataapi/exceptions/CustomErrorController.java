@@ -1,4 +1,4 @@
-package by.kolp.myappcore.model.exceptions;
+package by.kolp.myappdataapi.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -25,7 +25,7 @@ public class CustomErrorController implements ErrorController {
 
 
     @RequestMapping(CustomErrorController.ERROR_PATH)
-    public ResponseEntity<by.kolp.myappcore.model.exceptions.ErrorDto> error(HttpServletRequest request, WebRequest webRequest) {
+    public ResponseEntity<ErrorDto> error(HttpServletRequest request, WebRequest webRequest) {
 
 
         Map<String, Object> attributes = errorAttributes.getErrorAttributes(
@@ -35,7 +35,7 @@ public class CustomErrorController implements ErrorController {
 
         return ResponseEntity
                 .status(attributes.get("status") != null ? (Integer) attributes.get("status") : 500)
-                .body(by.kolp.myappcore.model.exceptions.ErrorDto.builder()
+                .body(ErrorDto.builder()
                         .error((String) attributes.get("error"))
                         .errorDescription((String) attributes.get("message"))
                         .build());

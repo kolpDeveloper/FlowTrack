@@ -1,4 +1,4 @@
-package by.kolp.myappcore.model.exceptions;
+package by.kolp.myappdataapi.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
