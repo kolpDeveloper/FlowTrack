@@ -1,13 +1,12 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.model.dto.AckDTO;
-import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
-import by.kolp.myappcore.model.exceptions.BadRequestException;
-import by.kolp.myappcore.model.exceptions.NotFoundException;
 import by.kolp.myappcore.repository.interfaces.NumericDataEntryRepository;
-import by.kolp.myappservice.service.CalculateService;
-import by.kolp.myappweb.factories.NumericDataEntryDtoFactory;
+import by.kolp.myappdataapi.dto.AckDTO;
+import by.kolp.myappdataapi.dto.NumericDataEntryDTO;
+import by.kolp.myappdataapi.exceptions.BadRequestException;
+import by.kolp.myappdataapi.exceptions.NotFoundException;
+import by.kolp.myappdataapi.factories.NumericDataEntryDtoFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 public class CalculateServiceController {
 
-    private final CalculateService calculateService;
+    //private final CalculateService calculateService;
     private final NumericDataEntryRepository numericDataEntryRepository;
     private final NumericDataEntryDtoFactory numericDataEntryDtoFactory;
 
@@ -27,8 +26,8 @@ public class CalculateServiceController {
 
 
     @Autowired
-    public CalculateServiceController(CalculateService calculateService, NumericDataEntryRepository numericDataEntryRepository) {
-        this.calculateService = calculateService;
+    public CalculateServiceController(NumericDataEntryRepository numericDataEntryRepository) {
+        //this.calculateService = calculateService;
         this.numericDataEntryRepository = numericDataEntryRepository;
         this.numericDataEntryDtoFactory = new NumericDataEntryDtoFactory();
     }
@@ -65,7 +64,9 @@ public class CalculateServiceController {
     @GetMapping("/api/value/sum")
     public Long getTotalSum() {
         log.info("Getting total sum");
-        return calculateService.getTotalSum();
+        //return calculateService.getTotalSum();
+        return null;
+        //todo get total sum
     }
 
 }

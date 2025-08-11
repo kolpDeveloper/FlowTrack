@@ -1,10 +1,9 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
 import by.kolp.myappcore.model.entity.User;
+import by.kolp.myappcore.repository.interfaces.UserRepository;
+import by.kolp.myappdataapi.dto.UserCreatingRequestDTO;
 import by.kolp.myappsecurity.security.JWTUtil;
-import by.kolp.myappservice.service.RegistrationService;
-import by.kolp.myappweb.util.UserValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -21,30 +20,31 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final ModelMapper modelMapper;
-    private final RegistrationService registrationService;
+    private ModelMapper modelMapper;
     private final JWTUtil jwtUtil;
-    private final UserValidator userValidator;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AuthController(ModelMapper modelMapper, RegistrationService registrationService, JWTUtil jwtUtil, UserValidator userValidator) {
-        this.modelMapper = modelMapper;
-        this.registrationService = registrationService;
+    public AuthController(JWTUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
-        this.userValidator = userValidator;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/registration")
     public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody @Valid UserCreatingRequestDTO registration, BindingResult bindingResult) {
         User user = convertToUser(registration);
 
-        userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return Map.of("ERROR", "This value already exists");
         }
 
-        registrationService.registerUser(user);
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return Map.of("ERROR", "User already exists");
+        }
+
+        //todo registration service implementation
+        //registrationService.registerUser(user);
 
         String token = jwtUtil.generateToken(user.getUsername());
         return Map.of("jwt-token", token);

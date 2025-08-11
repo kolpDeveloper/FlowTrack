@@ -2,7 +2,7 @@
 package by.kolp.myappweb.controllerTest;
 
 
-import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
+import by.kolp.myappdataapi.dto.UserCreatingRequestDTO;
 import by.kolp.myappcore.model.entity.Role;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.model.enums.RoleName;
