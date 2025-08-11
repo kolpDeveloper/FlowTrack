@@ -1,24 +1,14 @@
 package by.kolp.myappservice.service;
 
 
-import by.kolp.myappcore.model.entity.Role;
-import by.kolp.myappcore.model.entity.User;
-import by.kolp.myappcore.repository.interfaces.RoleRepository;
-import by.kolp.myappcore.repository.interfaces.UserRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import static by.kolp.myappcore.model.enums.RoleName.ROLE_ADMIN;
-import static by.kolp.myappcore.model.enums.RoleName.ROLE_USER;
+import by.kolp.myappservice.serviceDto.UserRegistrationRequest;
 
 
-@Component
-public class RegistrationService {
-    
-    private final UserRepository userRepository;
+public interface RegistrationService {
+
+    void registerUser(UserRegistrationRequest user);
+    void register(UserRegistrationRequest user, boolean isAdmin);
+    /*private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
@@ -31,13 +21,15 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
+*/
 
-    @Transactional
-    public void register(User user, boolean isAdmin) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(isAdmin ? adminRole : defaultUserRole);
+
+    /*@Transactional
+    public void register(UserResponseDTO user, boolean isAdmin) {
+        user.password(passwordEncoder.encode(user.password()));
+        user.ole(isAdmin ? adminRole : defaultUserRole);
         userRepository.save(user);
-    }
+    }*/
 
     /*@PostConstruct
     private void initialize() {
@@ -56,10 +48,10 @@ public class RegistrationService {
                 });
     }*/
 
-    @Transactional
+    /*@Transactional
     public void registerUser(User user) {
         register(user, false);
-    }
+    }*/
 
     /*@Transactional
     public User registerAdmin(User user) {
