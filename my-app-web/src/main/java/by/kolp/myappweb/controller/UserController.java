@@ -1,16 +1,16 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.model.dto.AckDTO;
-import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
-import by.kolp.myappcore.model.dto.UserRegistrationDTO;
+import by.kolp.myappdataapi.dto.AckDTO;
+import by.kolp.myappdataapi.dto.UserCreatingRequestDTO;
+import by.kolp.myappdataapi.dto.UserRegistrationDTO;
 import by.kolp.myappcore.model.entity.Role;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.model.enums.RoleName;
-import by.kolp.myappcore.model.exceptions.BadRequestException;
-import by.kolp.myappcore.model.exceptions.NotFoundException;
 import by.kolp.myappcore.repository.interfaces.RoleRepository;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
-import by.kolp.myappweb.factories.UserRegistrationDtoFactory;
+import by.kolp.myappdataapi.exceptions.BadRequestException;
+import by.kolp.myappdataapi.exceptions.NotFoundException;
+import by.kolp.myappdataapi.factories.UserRegistrationDtoFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

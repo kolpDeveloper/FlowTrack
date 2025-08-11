@@ -1,6 +1,6 @@
-package by.kolp.myappweb.factories;
+package by.kolp.myappdataapi.factories;
 
-import by.kolp.myappcore.model.dto.UserRegistrationDTO;
+import by.kolp.myappdataapi.dto.UserRegistrationDTO;
 import by.kolp.myappcore.model.entity.User;
 import org.springframework.stereotype.Component;
 

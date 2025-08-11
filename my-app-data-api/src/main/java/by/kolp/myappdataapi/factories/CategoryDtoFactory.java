@@ -1,6 +1,6 @@
-package by.kolp.myappweb.factories;
+package by.kolp.myappdataapi.factories;
 
-import by.kolp.myappcore.model.dto.CategoryDTO;
+import by.kolp.myappdataapi.dto.CategoryDTO;
 import by.kolp.myappcore.model.entity.Category;
 
 public class CategoryDtoFactory {
