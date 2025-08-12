@@ -1,8 +1,7 @@
-package by.kolp.myappserviceimpl;
+package by.kolp.myappserviceimpl.serviceRepository;
 
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.repository.interfaces.NumericDataEntryRepository;
-import by.kolp.myappdataapi.dto.NumericDataEntryDTO;
 import by.kolp.myappservice.service.CalculateService;
 import by.kolp.myappservice.serviceDto.NumericDataEntryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
