@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 public class CalculateServiceController {
 
-    //private final CalculateService calculateService;
+
     private final NumericDataEntryRepository numericDataEntryRepository;
     private final NumericDataEntryDtoFactory numericDataEntryDtoFactory;
 
@@ -27,7 +27,6 @@ public class CalculateServiceController {
 
     @Autowired
     public CalculateServiceController(NumericDataEntryRepository numericDataEntryRepository) {
-        //this.calculateService = calculateService;
         this.numericDataEntryRepository = numericDataEntryRepository;
         this.numericDataEntryDtoFactory = new NumericDataEntryDtoFactory();
     }
@@ -40,33 +39,22 @@ public class CalculateServiceController {
             throw new BadRequestException("Value is required.");
         }
 
-        NumericDataEntry data = numericDataEntryRepository.saveAndFlush(
-                NumericDataEntry.builder()
-                        .key(numericDataEntryDTO.key())
-                        .value(numericDataEntryDTO.value())
-                        .build());
+        NumericDataEntry data = numericDataEntryRepository.saveAndFlush(NumericDataEntry.builder().key(numericDataEntryDTO.key()).value(numericDataEntryDTO.value()).build());
         return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
     }
 
     @DeleteMapping(DELETE_VALUE)
     public AckDTO delete_value(@PathVariable Long id) {
-        NumericDataEntry dataEntry = numericDataEntryRepository
-                .findById(id)
-                .orElseThrow(() ->
-                        new NotFoundException(String
-                                .format("This id \"%s%%\" doesn't exist", id)));
+        NumericDataEntry dataEntry = numericDataEntryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("This id \"%s%%\" doesn't exist", id)));
         numericDataEntryRepository.delete(dataEntry);
 
         return new AckDTO("Value successfully deleted", true);
     }
 
-
     @GetMapping("/api/value/sum")
     public Long getTotalSum() {
         log.info("Getting total sum");
-        //return calculateService.getTotalSum();
-        return null;
-        //todo get total sum
+        return numericDataEntryRepository.getTotalSum();
     }
 
 }

@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Stream<User> streamAll();
 
+    @Override
+    <S extends User> S save(S entity);
 }

@@ -20,8 +20,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public void register(User user, boolean isAdmin) {
+    public void register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+
+
 }

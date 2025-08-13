@@ -19,7 +19,7 @@ public class CalculateServiceImpl implements CalculateService {
         this.numericDataEntryRepository = numericDataEntryRepository;
     }
 
-    @Override
+    /*@Override
     @Transactional
     public Long sumAllValues(@Validated NumericDataEntryRequest data) {
         var numericData = NumericDataEntry.builder()
@@ -30,5 +30,5 @@ public class CalculateServiceImpl implements CalculateService {
         numericDataEntryRepository.save(numericData);
 
         return numericDataEntryRepository.getTotalSum();
-    }
+    }*/
 }

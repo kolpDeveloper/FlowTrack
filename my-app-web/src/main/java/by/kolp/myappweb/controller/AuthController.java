@@ -4,6 +4,7 @@ import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import by.kolp.myappdataapi.dto.UserCreatingRequestDTO;
 import by.kolp.myappsecurity.security.JWTUtil;
+import by.kolp.myappserviceimpl.serviceRepository.RegistrationServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -20,13 +21,16 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     private final JWTUtil jwtUtil;
+    private final RegistrationServiceImpl registrationService;
     private final UserRepository userRepository;
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, UserRepository userRepository) {
+    public AuthController(JWTUtil jwtUtil, RegistrationServiceImpl registrationService, UserRepository userRepository) {
+        this.modelMapper = new ModelMapper();
         this.jwtUtil = jwtUtil;
+        this.registrationService = registrationService;
         this.userRepository = userRepository;
     }
 
@@ -43,8 +47,7 @@ public class AuthController {
             return Map.of("ERROR", "User already exists");
         }
 
-        //todo registration service implementation
-        //registrationService.registerUser(user);
+        registrationService.register(user);
 
         String token = jwtUtil.generateToken(user.getUsername());
         return Map.of("jwt-token", token);

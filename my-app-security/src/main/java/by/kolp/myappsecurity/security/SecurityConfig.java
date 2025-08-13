@@ -12,10 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-//@RequiredArgsConstructor
 public class SecurityConfig {
-
-   // private final JwtAuthenticationFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,6 +32,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/send").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/sum/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/value/sum").permitAll()
+
                         .anyRequest().authenticated()
                 );
 
