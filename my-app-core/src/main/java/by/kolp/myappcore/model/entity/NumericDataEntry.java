@@ -42,16 +42,4 @@ public class NumericDataEntry {
         this.value = value;
         this.numericData = numericData;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        NumericDataEntry dataEntry = (NumericDataEntry) o;
-        return Objects.equals(id, dataEntry.id) && Objects.equals(key, dataEntry.key) && Objects.equals(value, dataEntry.value) && Objects.equals(numericData, dataEntry.numericData);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, key, value, numericData);
-    }
 }

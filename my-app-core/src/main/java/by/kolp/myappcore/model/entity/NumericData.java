@@ -40,16 +40,4 @@ public class NumericData {
       //  entriesList.add(new NumericDataEntry(key, value, this));
     //}
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        NumericData that = (NumericData) o;
-        return Objects.equals(id, that.id) && Objects.equals(entriesList, that.entriesList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, entriesList);
-    }
 }
