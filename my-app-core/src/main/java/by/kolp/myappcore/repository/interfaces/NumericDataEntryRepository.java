@@ -3,17 +3,19 @@ package by.kolp.myappcore.repository.interfaces;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface NumericDataEntryRepository extends JpaRepository<NumericDataEntry, Long> {
 
     @Query("SELECT SUM(e.value) from NumericDataEntry e")
     Long getTotalSum();
 
-    Optional<NumericDataEntry> findById(@NonNull Long id);
+    Optional<NumericDataEntry> findById(Long id);
 
+    @Override
+    <S extends NumericDataEntry> S saveAndFlush(S entity);
+
+    @Override
+    void delete(NumericDataEntry entity);
 }

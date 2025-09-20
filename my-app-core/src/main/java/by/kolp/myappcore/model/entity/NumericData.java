@@ -34,7 +34,7 @@ public class NumericData {
     private List<by.kolp.myappcore.model.entity.NumericDataEntry> entriesList = new ArrayList<>();
 
     @CreationTimestamp
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
     //public void addEntry(String key, Integer value) {
       //  entriesList.add(new NumericDataEntry(key, value, this));

@@ -33,7 +33,7 @@ public class Category {
     private String name;
 
     @CreationTimestamp
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
 
     @Override

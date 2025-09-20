@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: flowtrack
+
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/flow-track
+    #driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: root
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+
+  # H2 Console (для разработки)
+  #h2:
+   # console:
+   #   enabled: true
+
+  # RabbitMQ Configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# Server Configuration
+server:
+  port: 8080
+
+# Security Configuration
+jwt_secret: hello
+
+# RabbitMQ Queues (из вашего producer модуля)
+rabbitmq:
+  queue:
+    name: FirstQueue
+  json:
+    queue:
+      name: jsonQueue
+  exchange:
+    name: java_exchange
+  routing:
+    key: java_routing_key
+    json:
+      key: java_json_routing_key
+  queue_with_delay:
+    name: hello_world_delay_queue
+
+# User Service Client
+user-service:
+  base-url: http://localhost:8080
+
+# Logging
+logging:
+  level:
+    root: INFO
+    by.kolp.flowtrack: DEBUG

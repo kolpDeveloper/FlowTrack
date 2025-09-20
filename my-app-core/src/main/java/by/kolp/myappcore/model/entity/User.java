@@ -29,7 +29,7 @@ public class User {
             sequenceName = "users_seq",
             allocationSize = 1
     )
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true, length = 40)
     private String username;
@@ -46,18 +46,15 @@ public class User {
     private Role role;
 
     @CreationTimestamp
-    @Builder.Default
     @Column(nullable = false, name = "created_at", updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
 
     @UpdateTimestamp
-    @Builder.Default
     @Column(nullable = false, name = "updated_at")
-    private Instant updatedAt = Instant.now();
+    private Instant updatedAt;
 
     @UpdateTimestamp
-    @Builder.Default
     @Column(nullable = false)
-    private Instant lastLoginAt = Instant.now();
+    private Instant lastLoginAt;
 }

@@ -11,14 +11,8 @@
 
     <modules>
         <module>my-app-core</module>
-        <module>my-app-security</module>
-        <module>my-app-service</module>
-        <module>my-app-starter</module>
-        <module>my-app-web</module>
-        <module>my-app-producer</module>
-        <module>my-app-user-client</module>
-        <module>my-app-data-api</module>
-        <module>my-app-service-impl</module>
+        <module>my-app-api</module>
+        <module>my-app-messaging</module>
     </modules>
 
     <properties>
@@ -36,17 +30,21 @@
             <version>2.0.1.Final</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
             <version>3.5.3</version>
         </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.9</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -60,24 +58,23 @@
             <scope>runtime</scope>
             <version>42.7.5</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>3.5.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>3.5.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>6.2.6</version>
         </dependency>
-
-
     </dependencies>
-
-
 </project>

@@ -1,0 +1,15 @@
+package by.kolp.myappweb.factories;
+
+import by.kolp.myappweb.dto.UserRegistrationDTO;
+import by.kolp.myappcore.model.entity.User;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserRegistrationDtoFactory {
+    public UserRegistrationDTO makeUserRegistrationDto(User user ) {
+        return UserRegistrationDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+    }
+}
