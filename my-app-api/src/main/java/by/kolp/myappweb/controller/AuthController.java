@@ -5,15 +5,14 @@ import by.kolp.myappcore.service.RegistrationService;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.UserCreatingRequestDTO;
 import by.kolp.myappweb.security.JWTUtil;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody UserCreatingRequestDTO registration, BindingResult bindingResult) {
+    public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody @Valid UserCreatingRequestDTO registration, BindingResult bindingResult) {
         User user = convertToUser(registration);
 
 

@@ -44,7 +44,7 @@ public class CalculateController {
 
     @GetMapping("/api/value/sum")
     public Long getTotalSum() {
-        log.info("Getting total sum");
+        //@log.info("Getting total sum");
         return numericDataEntryService.getTotalSum();
     }
 
