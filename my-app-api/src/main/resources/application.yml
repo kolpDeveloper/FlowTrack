@@ -5,6 +5,7 @@ spring:
   # Database Configuration
   datasource:
     url: jdbc:postgresql://localhost:5432/flow-track
+
     #driver-class-name: org.h2.Driver
     username: sa
     password: password
@@ -16,7 +17,7 @@ spring:
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: false
 
   # H2 Console (для разработки)

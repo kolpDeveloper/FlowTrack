@@ -1,26 +1,25 @@
 package by.kolp.myappweb.controller;
 
+import by.kolp.myappcore.exceptions.BadRequestException;
+import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.UserCreatingRequestDTO;
 import by.kolp.myappweb.dto.UserRegistrationDTO;
-import by.kolp.myappcore.model.entity.Role;
-import by.kolp.myappcore.model.entity.User;
-import by.kolp.myappcore.model.enums.RoleName;
-import by.kolp.myappcore.repository.interfaces.RoleRepository;
-import by.kolp.myappcore.repository.interfaces.UserRepository;
-import by.kolp.myappcore.exceptions.BadRequestException;
-import by.kolp.myappcore.exceptions.NotFoundException;
 import by.kolp.myappweb.factories.UserRegistrationDtoFactory;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +38,6 @@ public class UserController {
     UserService userService;
     UserRegistrationDtoFactory userRegistrationDtoFactory;
     PasswordEncoder passwordEncoder;
-    RoleRepository roleRepository;
 
 
     public static final String CREATE_USER = "/user";
@@ -75,7 +73,11 @@ public class UserController {
 
 
     @PostMapping(CREATE_USER)
-    public UserRegistrationDTO register(@RequestBody UserCreatingRequestDTO request) {
+    public ResponseEntity<String> register(@RequestBody @Valid UserCreatingRequestDTO request, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("Request body is invalid");
+        }
 
         if (request.getUsername().trim().isEmpty() || request.getPassword().trim().isEmpty()) {
             throw new BadRequestException("Username or password cannot be empty");
@@ -88,18 +90,18 @@ public class UserController {
                             throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
                         });
 
-        Role defaultRole = getOrCreateDefaultRole();
 
         User newUser = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(defaultRole)
+                .role(request.getRole())
                 .build();
 
         newUser = userService.save(newUser);
 
-        return userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
+        userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
+        return ResponseEntity.ok("User successfully registered.");
     }
 
     @PatchMapping(EDIT_USER)
@@ -122,16 +124,5 @@ public class UserController {
         user = userService.saveAndFlush(user);
 
         return userRegistrationDtoFactory.makeUserRegistrationDto(user);
-    }
-
-    private Role getOrCreateDefaultRole() {
-        return roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseGet(() -> {
-                    Role defaultRole = new Role();
-                    defaultRole.setName(RoleName.ROLE_USER);
-                    return roleRepository.save(defaultRole);
-                });
-
-        //todo
     }
 }
