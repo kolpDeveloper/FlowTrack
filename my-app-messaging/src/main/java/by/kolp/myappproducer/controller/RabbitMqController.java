@@ -2,7 +2,6 @@ package by.kolp.myappproducer.controller;
 
 import by.kolp.myappproducer.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ public class RabbitMqController {
 
     private final MessageService messageService;
 
-    @Autowired
     public RabbitMqController(MessageService messageService) {
         this.messageService = messageService;
     }
