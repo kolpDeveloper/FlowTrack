@@ -3,6 +3,7 @@ package by.kolp.myappweb;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
@@ -11,6 +12,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappproducer"
 })
 @EntityScan("by.kolp.myappcore.model.entity")
+@ComponentScan(basePackages = {
+        "by.kolp.myappweb.controller",
+        "by.kolp.myappweb.security",
+        "by.kolp.myappweb.factories",
+        "by.kolp.myappweb.mapper",
+        "by.kolp.myappcore.service",
+        "by.kolp.myappcore.repository"
+})
 @EnableJpaRepositories("by.kolp.myappcore.repository")
 public class MyApplicationRunner {
     public static void main(String[] args) {
