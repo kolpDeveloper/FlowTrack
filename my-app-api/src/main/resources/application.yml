@@ -6,9 +6,6 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/flow-track
 
-    #driver-class-name: org.h2.Driver
-    username: sa
-    password: password
     hikari:
       driver-class-name: org.postgresql.Driver
       username: postgres
@@ -37,7 +34,10 @@ server:
   port: 8080
 
 # Security Configuration
-jwt_secret: hello
+
+jwt:
+  secret: hello
+  expiration: PT1H
 
 # RabbitMQ Queues (из вашего producer модуля)
 rabbitmq:
