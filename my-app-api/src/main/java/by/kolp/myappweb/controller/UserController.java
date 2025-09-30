@@ -1,12 +1,12 @@
 package by.kolp.myappweb.controller;
 
+import by.kolp.myappweb.mapper.UserMapper;
 import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.UserCreatingRequestDTO;
 import by.kolp.myappweb.dto.UserRegistrationDTO;
-import by.kolp.myappweb.factories.UserRegistrationDtoFactory;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class UserController {
 
 
     UserService userService;
-    UserRegistrationDtoFactory userRegistrationDtoFactory;
+    UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
 
@@ -60,14 +59,14 @@ public class UserController {
     @GetMapping(FETCH_USERS)
     public List<UserRegistrationDTO> fetchUsers(@RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
 
-        optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.trim().isEmpty());
+        optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.isEmpty());
 
         Stream<User> users = optionalPrefixName.stream()
                 .map(userService::streamAllByUsernameStartingWithIgnoreCase)
                 .findAny().orElseGet(userService::streamAll);
 
         return users
-                .map(userRegistrationDtoFactory::makeUserRegistrationDto)
+                .map(userMapper::toRegistrationDTO)
                 .collect(Collectors.toList());
     }
 
@@ -79,28 +78,23 @@ public class UserController {
             return ResponseEntity.badRequest().body("Request body is invalid");
         }
 
-        if (request.getUsername().trim().isEmpty() || request.getPassword().trim().isEmpty()) {
+        if (request.username().isEmpty() || request.password().isEmpty()) {
             throw new BadRequestException("Username or password cannot be empty");
         }
 
         userService
-                .findByUsername(request.getUsername())
+                .findByUsername(request.username())
                 .ifPresent(
                         user -> {
-                            throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
+                            throw new BadRequestException(format("User \"%s\" already exists.", request.username()));
                         });
 
 
-        User newUser = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
+        User newUser = userMapper.toUser(request);
+        newUser.setPassword(passwordEncoder.encode(request.password()));
+
 
         newUser = userService.save(newUser);
-
-        userRegistrationDtoFactory.makeUserRegistrationDto(newUser);
         return ResponseEntity.ok("User successfully registered.");
     }
 
@@ -108,21 +102,21 @@ public class UserController {
     public UserRegistrationDTO editUsername(@PathVariable("user_id") Integer userId,
                                             @RequestBody UserCreatingRequestDTO request) {
 
-        if (request.getUsername().trim().isEmpty()) {
+        if (request.username().isEmpty()) {
             throw new BadRequestException("Username cannot be empty");
         }
 
         User user = userService.findById(userId);
 
-        userService.findByUsername(request.getUsername())
+        userService.findByUsername(request.username())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), userId))
                 .ifPresent(anotherUser -> {
-                    throw new BadRequestException(format("User \"%s\" already exists.", request.getUsername()));
+                    throw new BadRequestException(format("User \"%s\" already exists.", request.username()));
                 });
 
-        user.setUsername(request.getUsername());
+        user.setUsername(request.username());
         user = userService.saveAndFlush(user);
 
-        return userRegistrationDtoFactory.makeUserRegistrationDto(user);
+        return userMapper.toRegistrationDTO(user);
     }
 }

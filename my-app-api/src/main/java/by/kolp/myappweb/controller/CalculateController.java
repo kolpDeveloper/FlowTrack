@@ -6,18 +6,19 @@ import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.service.NumericDataEntryService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.NumericDataEntryDTO;
-import by.kolp.myappweb.factories.NumericDataEntryDtoFactory;
+import by.kolp.myappweb.mapper.NumericMapper;
+import by.kolp.myappweb.mapper.NumericMapperImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class CalculateController {
 
     private final NumericDataEntryService numericDataEntryService;
-    private final NumericDataEntryDtoFactory numericDataEntryDtoFactory;
+    private final NumericMapperImpl numericMapper;
 
     private static final String CREATE_VALUE = "/api/value";
     private static final String DELETE_VALUE = "/api/value/{id}";
@@ -31,7 +32,7 @@ public class CalculateController {
         }
 
         NumericDataEntry data = numericDataEntryService.saveAndFlush(NumericDataEntry.builder().key(numericDataEntryDTO.key()).value(numericDataEntryDTO.value()).build());
-        return numericDataEntryDtoFactory.makeNumericDataEntryDto(data);
+        return numericMapper.map(data);
     }
 
     @DeleteMapping(DELETE_VALUE)
@@ -44,7 +45,7 @@ public class CalculateController {
 
     @GetMapping("/api/value/sum")
     public Long getTotalSum() {
-        //@log.info("Getting total sum");
+        log.info("Getting total sum");
         return numericDataEntryService.getTotalSum();
     }
 
