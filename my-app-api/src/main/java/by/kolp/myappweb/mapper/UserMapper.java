@@ -14,7 +14,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "lastLoginAt", ignore = true)
-    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "role", ignore = true)
     User toUser(UserCreatingRequestDTO dto);
 
     UserRegistrationDTO toRegistrationDTO(User user);

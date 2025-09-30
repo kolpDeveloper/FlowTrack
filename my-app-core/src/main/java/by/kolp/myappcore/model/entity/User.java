@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.List;
 
 
 @Getter
@@ -60,9 +59,5 @@ public class User {
     @Column(nullable = false)
     private Instant lastLoginAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "role")
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<Role> roles;
+
 }

@@ -22,7 +22,7 @@ public record UserCreatingRequestDTO(@NotEmpty(message = "Username cannot be emp
                                      @Size(min = 8, max = 100)
                                      String password,
 
-                                     List<Role> roles) {
+                                     Role role) {
 
 
 }
