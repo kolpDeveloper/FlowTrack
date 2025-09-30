@@ -16,17 +16,25 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding -->
         <dependency>
-            <groupId>org.modelmapper</groupId>
-            <artifactId>modelmapper</artifactId>
-            <version>3.2.4</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
@@ -104,4 +112,30 @@
             <version>6.5.3</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Compiler plugin с annotation processing -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>22</source>
+                    <target>22</target>
+                    <release>22</release>
+                    <annotationProcessorPaths>
+                        <!-- Lombok annotation processor -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.38</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

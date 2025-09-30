@@ -5,6 +5,7 @@ import by.kolp.myappcore.repository.interfaces.UserClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -14,9 +15,11 @@ public class RestUserClientService {
 
     private final UserClientRepository userClientRepository;
 
+
     public Optional<User> getUserById(Long id) {
         return userClientRepository.getUserById(id);
     }
+
 
     public Optional<User> findUserByUsername(String username) {
         return userClientRepository.findUserByUsername(username);

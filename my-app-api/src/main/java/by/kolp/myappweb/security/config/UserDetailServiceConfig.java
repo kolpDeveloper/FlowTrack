@@ -7,10 +7,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Configuration
-@RequiredArgsConstructor
+
 public class UserDetailServiceConfig {
 
     private final UserService userService;
+
+    public UserDetailServiceConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     public UserDetailsService getUserDetailsService() {
         return username -> userService.findByUsername(username)

@@ -5,6 +5,7 @@ import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -14,8 +15,8 @@ import static java.lang.String.format;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
 
+    private final UserRepository userRepository;
 
     public User findById(Integer id) {
         return userRepository.findById(id).orElseThrow  (() ->

@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.util.Objects;
 
 @Builder
 @Entity
@@ -36,10 +35,4 @@ public class NumericDataEntry {
     @CreationTimestamp
     @Builder.Default
     private Instant createdAt = Instant.now();
-
-    public NumericDataEntry(String key, Integer value, NumericData numericData) {
-        this.key = key;
-        this.value = value;
-        this.numericData = numericData;
-    }
 }
