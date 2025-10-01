@@ -12,8 +12,10 @@ public class NumericMapperImpl implements NumericMapper {
             return null;
         }
 
-        NumericDataEntry numericDataEntry = new NumericDataEntry();
 
-        return new NumericDataEntryDTO(numericDataEntry.getKey(), numericDataEntry.getValue(), numericDataEntry.getCreatedAt());
+        return new NumericDataEntryDTO(
+                entry.getKey(),
+                entry.getValue(),
+                entry.getCreatedAt());
     }
 }
