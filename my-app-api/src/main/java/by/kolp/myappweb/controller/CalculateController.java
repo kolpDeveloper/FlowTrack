@@ -6,7 +6,6 @@ import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.service.NumericDataEntryService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.NumericDataEntryDTO;
-import by.kolp.myappweb.mapper.NumericMapper;
 import by.kolp.myappweb.mapper.NumericMapperImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

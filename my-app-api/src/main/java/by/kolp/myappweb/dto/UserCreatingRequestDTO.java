@@ -1,12 +1,10 @@
 package by.kolp.myappweb.dto;
 
 import by.kolp.myappcore.model.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.List;
 
 
 @Builder
