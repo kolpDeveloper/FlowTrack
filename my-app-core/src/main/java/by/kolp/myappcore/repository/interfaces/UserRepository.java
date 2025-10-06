@@ -1,13 +1,10 @@
 package by.kolp.myappcore.repository.interfaces;
 
 import by.kolp.myappcore.model.entity.User;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -24,6 +21,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u")
     Stream<User> streamAll();
+
+    @Query("select u.email from User u")
+    List<String> findAllEmails();
 
     @Override
     <S extends User> S save(S entity);

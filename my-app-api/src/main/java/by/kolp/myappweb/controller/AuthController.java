@@ -30,7 +30,6 @@ public class AuthController {
     public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody @Valid UserCreatingRequestDTO registration, BindingResult bindingResult) {
         User user = userMapper.toUser(registration);
 
-
         if (bindingResult.hasErrors()) {
             return Map.of("ERROR", "Results has errors");
         }

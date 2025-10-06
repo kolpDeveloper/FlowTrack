@@ -14,8 +14,8 @@ spring:
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
 
   # H2 Console (для разработки)
   #h2:
@@ -30,8 +30,23 @@ spring:
     password: guest
 
 # Server Configuration
+
+  mail:
+    username: rerrr0870@gmail.com
+    password: cada gmgs ybua mwou
+    properties:
+      mail:
+        port: 587
+        smtp:
+          host: smtp.gmail.com
+          auth: true
+          starttls:
+            enable: true
+
 server:
   port: 8080
+
+
 
 # Security Configuration
 
