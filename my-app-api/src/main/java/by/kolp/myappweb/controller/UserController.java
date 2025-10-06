@@ -1,12 +1,12 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappweb.mapper.UserMapper;
 import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.UserCreatingRequestDTO;
 import by.kolp.myappweb.dto.UserRegistrationDTO;
+import by.kolp.myappweb.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +54,6 @@ public class UserController {
         return new AckDTO("User successfully deleted", true);
     }
 
-    @Transactional
     @GetMapping(FETCH_USERS)
     public List<UserRegistrationDTO> fetchUsers(@RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
 
