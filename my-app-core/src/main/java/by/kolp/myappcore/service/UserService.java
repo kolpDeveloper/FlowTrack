@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static java.lang.String.format;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -20,7 +18,7 @@ public class UserService {
 
     public User findById(Integer id) {
         return userRepository.findById(id).orElseThrow  (() ->
-                new NotFoundException(format("User \"%s\" doesn't exist")));
+                new NotFoundException("User \"%s\" doesn't exist"));
     }
 
     public User save(User user) {
@@ -35,6 +33,7 @@ public class UserService {
         return userRepository.streamAllByUsernameStartingWithIgnoreCase(username);
     }
 
+    @Transactional(readOnly = true)
     public Stream<User> streamAll() {
         return userRepository.streamAll();
     }
