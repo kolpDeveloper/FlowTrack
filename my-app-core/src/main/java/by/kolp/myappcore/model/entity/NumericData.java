@@ -30,14 +30,7 @@ public class NumericData {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "numericData", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<by.kolp.myappcore.model.entity.NumericDataEntry> entriesList = new ArrayList<>();
-
     @CreationTimestamp
     private Instant createdAt;
-
-    //public void addEntry(String key, Integer value) {
-      //  entriesList.add(new NumericDataEntry(key, value, this));
-    //}
 
 }

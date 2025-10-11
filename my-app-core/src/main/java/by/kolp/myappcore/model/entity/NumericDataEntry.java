@@ -28,10 +28,6 @@ public class NumericDataEntry {
     private String key;
     private Integer value;
 
-    @ManyToOne
-    @JoinColumn(name = "numeric_data_id")
-    private NumericData numericData;
-
     @CreationTimestamp
     @Builder.Default
     private Instant createdAt = Instant.now();

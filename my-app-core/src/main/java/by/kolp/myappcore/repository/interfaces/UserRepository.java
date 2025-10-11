@@ -4,7 +4,8 @@ import by.kolp.myappcore.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -12,9 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    Optional<User> findById(Long id);
-
-    Stream<User> streamAllByUsernameStartingWithIgnoreCase(String username);
+    Page<User> streamAllByUsernameStartingWithIgnoreCase(String username, Pageable pageable);
 
     @Override
     void deleteById(Integer integer);
@@ -22,8 +21,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Stream<User> streamAll();
 
-    @Query("select u.email from User u")
-    List<String> findAllEmails();
+    @Query(
+            value = "select u.email from User u",
+            countQuery = "select count(u) from User u"
+    )
+    Page<String> findAllEmails(Pageable pageable);
 
     @Override
     <S extends User> S save(S entity);

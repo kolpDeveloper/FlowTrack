@@ -6,7 +6,7 @@ import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.service.NumericDataEntryService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.NumericDataEntryDTO;
-import by.kolp.myappweb.mapper.NumericMapperImpl;
+import by.kolp.myappweb.mapper.NumericMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class CalculateController {
 
     private final NumericDataEntryService numericDataEntryService;
-    private final NumericMapperImpl numericMapper;
+    private final NumericMapper numericMapper;
 
     private static final String CREATE_VALUE = "/api/value";
     private static final String DELETE_VALUE = "/api/value/{id}";

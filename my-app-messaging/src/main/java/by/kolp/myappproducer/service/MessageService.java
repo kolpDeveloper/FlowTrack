@@ -2,9 +2,12 @@ package by.kolp.myappproducer.service;
 
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 
 @Service
@@ -13,7 +16,8 @@ public class MessageService {
 
     private final UserRepository userRepository;
 
-    public List<String> findAllEmails() {
-        return userRepository.findAllEmails();
+    public Page<String> findAllEmails(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
+        return userRepository.findAllEmails(pageable);
     }
 }

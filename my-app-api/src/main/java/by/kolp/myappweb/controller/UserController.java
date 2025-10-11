@@ -1,7 +1,7 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.model.entity.User;
+import by.kolp.myappcore.service.RegistrationService;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.AckDTO;
 import by.kolp.myappweb.dto.UserCreatingRequestDTO;
@@ -12,18 +12,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,7 +28,7 @@ public class UserController {
 
     UserService userService;
     UserMapper userMapper;
-    PasswordEncoder passwordEncoder;
+    RegistrationService registrationService;
 
 
     public static final String CREATE_USER = "/user";
@@ -46,75 +39,37 @@ public class UserController {
 
     @DeleteMapping(value = DELETE_USER)
     public AckDTO deleteUser(@PathVariable("user_id") Integer userId) {
-        User user = userService
-                .findById(userId);
-
-
+        User user = userService.findById(userId);
         userService.deleteById(user.getId());
         return new AckDTO("User successfully deleted", true);
     }
 
     @GetMapping(FETCH_USERS)
-    public List<UserRegistrationDTO> fetchUsers(@RequestParam(value = "prefix_name", required = false) Optional<String> optionalPrefixName) {
+    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) String prefixName,
+                                                @PageableDefault(size = 20, sort = "username") Pageable pageable) {
 
-        optionalPrefixName = optionalPrefixName.filter(prefixName -> !prefixName.isEmpty());
+        Page<User> users =  (prefixName != null && !prefixName.isBlank()
+        ? (userService.findAllByPrefix(prefixName, pageable))
+                : userService.findAll(pageable));
 
-        Stream<User> users = optionalPrefixName.stream()
-                .map(userService::streamAllByUsernameStartingWithIgnoreCase)
-                .findAny().orElseGet(userService::streamAll);
-
-        return users
-                .map(userMapper::toRegistrationDTO)
-                .collect(Collectors.toList());
+        Page<UserRegistrationDTO> result = users.map(userMapper::toRegistrationDTO);
+        return ResponseEntity.ok(result);
     }
 
 
     @PostMapping(CREATE_USER)
-    public ResponseEntity<String> register(@RequestBody @Valid UserCreatingRequestDTO request, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Request body is invalid");
-        }
-
-        if (request.username().isEmpty() || request.password().isEmpty()) {
-            throw new BadRequestException("Username or password cannot be empty");
-        }
-
-        userService
-                .findByUsername(request.username())
-                .ifPresent(
-                        user -> {
-                            throw new BadRequestException(format("User \"%s\" already exists.", request.username()));
-                        });
-
-
+    public ResponseEntity<String> register(@RequestBody @Valid UserCreatingRequestDTO request) {
         User newUser = userMapper.toUser(request);
-        newUser.setPassword(passwordEncoder.encode(request.password()));
-
-
-        newUser = userService.save(newUser);
-        return ResponseEntity.ok("User successfully registered.");
+        registrationService.register(newUser);
+        return ResponseEntity.ok("User successfully registered!");
     }
 
     @PatchMapping(EDIT_USER)
-    public UserRegistrationDTO editUsername(@PathVariable("user_id") Integer userId,
-                                            @RequestBody UserCreatingRequestDTO request) {
+    public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") Integer userId,
+                                            @RequestBody @Valid UserCreatingRequestDTO request) {
 
-        if (request.username().isEmpty()) {
-            throw new BadRequestException("Username cannot be empty");
-        }
 
-        User user = userService.findById(userId);
-
-        userService.findByUsername(request.username())
-                .filter(anotherUser -> !Objects.equals(anotherUser.getId(), userId))
-                .ifPresent(anotherUser -> {
-                    throw new BadRequestException(format("User \"%s\" already exists.", request.username()));
-                });
-
-        user.setUsername(request.username());
-        user = userService.saveAndFlush(user);
-
-        return userMapper.toRegistrationDTO(user);
+        User savedUser  = userService.edit(userId, request.username());
+        return ResponseEntity.ok(userMapper.toRegistrationDTO(savedUser));
     }
 }
