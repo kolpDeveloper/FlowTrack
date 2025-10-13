@@ -1,4 +1,4 @@
-package by.kolp.myappweb.dto;
+package by.kolp.myappcore.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;

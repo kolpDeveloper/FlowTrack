@@ -1,10 +1,13 @@
 package by.kolp.myappcore.service;
 
+import by.kolp.myappcore.exceptions.BadRequestException;
+import by.kolp.myappcore.mapper.NumericMapper;
+import by.kolp.myappcore.mapper.UserMapper;
+import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.repository.interfaces.NumericDataEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -13,6 +16,17 @@ import java.util.Optional;
 public class NumericDataEntryService {
 
     private final NumericDataEntryRepository numericDataEntryRepository;
+    private final NumericMapper numericMapper;
+
+    public NumericDataEntryDTO createNumericDataEntry(NumericDataEntryDTO numericDataEntryDTO) {
+        if (numericDataEntryDTO.value() == null) {
+            throw new BadRequestException("Value is required.");
+        }
+
+        NumericDataEntry newEntry = numericMapper.toEntity(numericDataEntryDTO);
+        NumericDataEntry savedEntry = numericDataEntryRepository.save(newEntry);
+        return numericMapper.toDto(savedEntry);
+    }
 
     public Long getTotalSum() {
         return Optional.ofNullable(numericDataEntryRepository.getTotalSum()).orElse(0L);

@@ -1,6 +1,5 @@
-package by.kolp.myappweb.dto;
+package by.kolp.myappcore.model.dto;
 
-import by.kolp.myappcore.model.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -18,9 +17,7 @@ public record UserCreatingRequestDTO(@NotEmpty(message = "Username cannot be emp
 
                                      @NotEmpty(message = "Password cannot be empty")
                                      @Size(min = 8, max = 100)
-                                     String password,
-
-                                     Role role) {
+                                     String password) {
 
 
 }

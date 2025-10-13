@@ -2,9 +2,13 @@ package by.kolp.myappcore.service;
 
 import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.exceptions.NotFoundException;
+import by.kolp.myappcore.mapper.UserMapper;
+import by.kolp.myappcore.model.dto.UserRegistrationDTO;
+import by.kolp.myappcore.model.dto.UsernameDto;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,15 +20,16 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public User findById(Integer id) {
-        return userRepository.findById(id).orElseThrow  (() ->
-                new NotFoundException("User \"%s\" doesn't exist"));
+    public Optional<User> findById(Integer id) {
+        return userRepository.findById(id);
     }
 
     public User save(User user) {
@@ -35,7 +40,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public Page<User> findAllByPrefix(String prefixName, Pageable pageable) {
+    public Page<User> streamAllByPrefix(Optional<String> prefixName, Pageable pageable) {
         return userRepository.streamAllByUsernameStartingWithIgnoreCase(prefixName, pageable);
     }
 
@@ -43,12 +48,13 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    @Transactional(readOnly = true)
-    public Stream<User> streamAll() {
-        return userRepository.streamAll();
+
+    public Page<User> streamAll(Pageable pageable) {
+        return userRepository.streamAll(pageable);
     }
 
     public void deleteById(Integer id) {
+        findById(id);
         userRepository.deleteById(id);
     }
 
@@ -56,22 +62,30 @@ public class UserService {
         return userRepository.saveAndFlush(user);
     }
 
-    public User edit(Integer id, String user) {
+    public Page<UserRegistrationDTO> fetchUser(Optional<String> prefixName, Pageable pageable) {
+        Page<User> users = (prefixName != null
+                ? (streamAllByPrefix(prefixName, pageable))
+                : streamAll(pageable));
 
-        if (user.isBlank()) {
-            throw new BadRequestException("Username cannot be empty");
-        }
+        log.info(users.toString());
+        return users.map(userMapper::toRegistrationDTO);
 
-        findByUsername(user)
+    }
+
+    public UserRegistrationDTO edit(Integer id, UsernameDto user) {
+        log.info("User:{} successfully edited!", user);
+
+        findByUsername(user.username())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), id))
                 .ifPresent(anotherUser -> {
                     throw new BadRequestException(format("User \"%s\" already exists.", user));
                 });
 
-        User newUser = findById(id);
-        newUser.setUsername(user);
+        User newUser = findById(id).orElseThrow(() ->
+                new NotFoundException("User not found!"));
 
-        return saveAndFlush(newUser);
+        newUser.setUsername(user.username());
+        User saved = userRepository.save(newUser);
+        return userMapper.toRegistrationDTO(saved);
     }
-
 }

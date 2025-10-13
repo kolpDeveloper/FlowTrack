@@ -1,12 +1,11 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.exceptions.NotFoundException;
+import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.service.NumericDataEntryService;
 import by.kolp.myappweb.dto.AckDTO;
-import by.kolp.myappweb.dto.NumericDataEntryDTO;
-import by.kolp.myappweb.mapper.NumericMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,21 +16,15 @@ import org.springframework.web.bind.annotation.*;
 public class CalculateController {
 
     private final NumericDataEntryService numericDataEntryService;
-    private final NumericMapper numericMapper;
 
     private static final String CREATE_VALUE = "/api/value";
     private static final String DELETE_VALUE = "/api/value/{id}";
 
 
     @PostMapping(CREATE_VALUE)
-    public NumericDataEntryDTO create_value(@RequestBody NumericDataEntryDTO numericDataEntryDTO) {
-
-        if (numericDataEntryDTO.value() == null) {
-            throw new BadRequestException("Value is required.");
-        }
-
-        NumericDataEntry data = numericDataEntryService.saveAndFlush(NumericDataEntry.builder().key(numericDataEntryDTO.key()).value(numericDataEntryDTO.value()).build());
-        return numericMapper.map(data);
+    public NumericDataEntryDTO create_value(@RequestBody @Valid NumericDataEntryDTO numericDataEntryDTO) {
+        log.info("Creating new value for {}", numericDataEntryDTO);
+        return numericDataEntryService.createNumericDataEntry(numericDataEntryDTO);
     }
 
     @DeleteMapping(DELETE_VALUE)

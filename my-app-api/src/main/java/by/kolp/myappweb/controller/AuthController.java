@@ -1,8 +1,7 @@
 package by.kolp.myappweb.controller;
 
+import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
 import by.kolp.myappcore.service.RegistrationService;
-import by.kolp.myappweb.dto.UserCreatingRequestDTO;
-import by.kolp.myappweb.mapper.UserMapper;
 import by.kolp.myappweb.security.JWTUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +18,6 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserMapper userMapper;
     private final JWTUtil jwtUtil;
     private final RegistrationService registrationService;
 
@@ -27,7 +25,7 @@ public class AuthController {
     @PostMapping("/registration")
     public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody @Valid UserCreatingRequestDTO registration) {
 
-        registrationService.register(userMapper.toUser(registration));
+        registrationService.register(registration);
 
         String token = jwtUtil.generateToken(registration.username());
         return Map.of("jwt-token", token);

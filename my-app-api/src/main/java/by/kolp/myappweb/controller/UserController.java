@@ -1,12 +1,11 @@
 package by.kolp.myappweb.controller;
 
-import by.kolp.myappcore.model.entity.User;
+import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
+import by.kolp.myappcore.model.dto.UserRegistrationDTO;
+import by.kolp.myappcore.model.dto.UsernameDto;
 import by.kolp.myappcore.service.RegistrationService;
 import by.kolp.myappcore.service.UserService;
 import by.kolp.myappweb.dto.AckDTO;
-import by.kolp.myappweb.dto.UserCreatingRequestDTO;
-import by.kolp.myappweb.dto.UserRegistrationDTO;
-import by.kolp.myappweb.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -25,9 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-
     UserService userService;
-    UserMapper userMapper;
     RegistrationService registrationService;
 
 
@@ -39,37 +38,33 @@ public class UserController {
 
     @DeleteMapping(value = DELETE_USER)
     public AckDTO deleteUser(@PathVariable("user_id") Integer userId) {
-        User user = userService.findById(userId);
-        userService.deleteById(user.getId());
+        userService.deleteById(userId);
+        log.info("Deleted user with id {}", userId);
         return new AckDTO("User successfully deleted", true);
     }
 
     @GetMapping(FETCH_USERS)
-    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) String prefixName,
-                                                @PageableDefault(size = 20, sort = "username") Pageable pageable) {
-
-        Page<User> users =  (prefixName != null && !prefixName.isBlank()
-        ? (userService.findAllByPrefix(prefixName, pageable))
-                : userService.findAll(pageable));
-
-        Page<UserRegistrationDTO> result = users.map(userMapper::toRegistrationDTO);
+    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) Optional<String> prefixName,
+                                                                @PageableDefault(size = 20, sort = "username") Pageable pageable) {
+        Page<UserRegistrationDTO> result = userService.fetchUser(prefixName, pageable);
+        log.info(result.toString());
         return ResponseEntity.ok(result);
     }
 
 
     @PostMapping(CREATE_USER)
-    public ResponseEntity<String> register(@RequestBody @Valid UserCreatingRequestDTO request) {
-        User newUser = userMapper.toUser(request);
-        registrationService.register(newUser);
-        return ResponseEntity.ok("User successfully registered!");
+    public ResponseEntity<UserRegistrationDTO> register(@RequestBody @Valid UserCreatingRequestDTO request)
+    {
+        log.info("Request body: {}", request.username());
+        return ResponseEntity.ok(registrationService.register(request));
     }
 
     @PatchMapping(EDIT_USER)
     public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") Integer userId,
-                                            @RequestBody @Valid UserCreatingRequestDTO request) {
-
-
-        User savedUser  = userService.edit(userId, request.username());
-        return ResponseEntity.ok(userMapper.toRegistrationDTO(savedUser));
+                                                            @RequestBody @Valid UsernameDto request)
+    {
+        UserRegistrationDTO savedUser = userService.edit(userId, request);
+        log.info("User:{} successfully edited!", savedUser);
+        return ResponseEntity.ok(savedUser);
     }
 }

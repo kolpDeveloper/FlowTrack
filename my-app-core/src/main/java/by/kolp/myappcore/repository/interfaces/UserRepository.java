@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -13,13 +15,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    Page<User> streamAllByUsernameStartingWithIgnoreCase(String username, Pageable pageable);
+    Page<User> streamAllByUsernameStartingWithIgnoreCase(Optional<String> username, Pageable pageable);
 
     @Override
     void deleteById(Integer integer);
 
     @Query("SELECT u FROM User u")
-    Stream<User> streamAll();
+    Page<User> streamAll(Pageable pageable);
 
     @Query(
             value = "select u.email from User u",
@@ -29,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Override
     <S extends User> S save(S entity);
+
+    Optional<User> findByEmail(String email);
 }
