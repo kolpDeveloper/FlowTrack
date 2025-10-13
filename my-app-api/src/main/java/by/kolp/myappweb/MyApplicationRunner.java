@@ -15,9 +15,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = {
         "by.kolp.myappweb.controller",
         "by.kolp.myappweb.security",
-        "by.kolp.myappweb.mapper",
+        "by.kolp.myappcore.mapper",
         "by.kolp.myappcore.service",
-        "by.kolp.myappcore.repository"
+        "by.kolp.myappcore.repository",
+        "by.kolp.myappcore.model.entity"
 })
 @EnableJpaRepositories("by.kolp.myappcore.repository")
 public class MyApplicationRunner {

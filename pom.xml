@@ -100,10 +100,10 @@
                     <release>22</release>
                     <annotationProcessorPaths>
                         <path>
-                        <groupId>org.mapstruct</groupId>
-                        <artifactId>mapstruct-processor</artifactId>
-                        <version>1.6.3</version>
-                    </path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.3</version>
+                        </path>
                         <!-- Lombok annotation processor -->
                         <path>
                             <groupId>org.projectlombok</groupId>

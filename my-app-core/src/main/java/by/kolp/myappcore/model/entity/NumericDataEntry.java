@@ -1,12 +1,15 @@
 package by.kolp.myappcore.model.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
-@Builder
+
 @Entity
 @Getter
 @Setter
@@ -29,6 +32,5 @@ public class NumericDataEntry {
     private Integer value;
 
     @CreationTimestamp
-    @Builder.Default
     private Instant createdAt = Instant.now();
 }

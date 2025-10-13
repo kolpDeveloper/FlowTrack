@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Log4j2
@@ -13,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorDto> handleBadRequest(BadRequestException ex, WebRequest request) {
+    public ResponseEntity<ErrorDto> handleBadRequest(BadRequestException ex) {
 
         log.error("Bad request", ex);
 
@@ -26,7 +25,7 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorDto> handleNotFound(NotFoundException ex, WebRequest request) {
+    public ResponseEntity<ErrorDto> handleNotFound(NotFoundException ex) {
         log.error("Not found", ex);
 
         ErrorDto errorDto = ErrorDto.builder()
@@ -38,7 +37,7 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleInternalError(Exception ex, WebRequest request) {
+    public ResponseEntity<ErrorDto> handleInternalError(Exception ex) {
 
         log.error("Internal error", ex);
 
