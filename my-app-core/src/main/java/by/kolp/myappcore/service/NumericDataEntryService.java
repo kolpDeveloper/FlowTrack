@@ -2,7 +2,6 @@ package by.kolp.myappcore.service;
 
 import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.mapper.NumericMapper;
-import by.kolp.myappcore.mapper.UserMapper;
 import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.repository.interfaces.NumericDataEntryRepository;
@@ -34,10 +33,6 @@ public class NumericDataEntryService {
 
     public Optional<NumericDataEntry> findById(Long id) {
         return numericDataEntryRepository.findById(id);
-    }
-
-    public NumericDataEntry saveAndFlush(NumericDataEntry entity) {
-        return numericDataEntryRepository.saveAndFlush(entity);
     }
 
     public void delete(NumericDataEntry entity) {
