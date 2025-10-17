@@ -14,6 +14,7 @@ public class RabbitConfiguration {
     @Value("${rabbitmq.json.queue.name}")
     private String jsonQueue;
 
+
     @Bean
     public Queue queue() {
         return new Queue(queue, false);
@@ -24,24 +25,8 @@ public class RabbitConfiguration {
         return new Queue(jsonQueue, false);
     }
 
-    /*@Bean
-    public TopicExchange topicExchange() {
-        return new TopicExchange(exchange);
-    }
-
     @Bean
-    public Binding binding() {
-        return BindingBuilder
-                .bind(queue())
-                .to(topicExchange())
-                .with(routingKey);
+    public Queue emailQueue() {
+        return new Queue("emailQueue", false);
     }
-
-    @Bean
-    public Binding jsonBinding() {
-        return BindingBuilder
-                .bind(jsonQueue())
-                .to(topicExchange())
-                .with(routingJsonKey);
-    }*/
 }

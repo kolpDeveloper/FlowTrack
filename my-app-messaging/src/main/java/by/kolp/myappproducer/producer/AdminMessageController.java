@@ -1,4 +1,4 @@
-package by.kolp.myappproducer.controller;
+package by.kolp.myappproducer.producer;
 
 import by.kolp.myappproducer.dto.AdminEmailRequest;
 import by.kolp.myappproducer.service.MailSenderService;
@@ -22,8 +22,8 @@ public class AdminMessageController {
     private final MailSenderService mailSenderService;
     private final MessageService messageService;
 
-    @PostMapping("/send/to/all")
-    public ResponseEntity<String> sendToAll(@RequestBody AdminEmailRequest request,
+    @PostMapping("/send/bulk")
+    public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request,
                                             @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "50") int size)
     {
@@ -33,4 +33,6 @@ public class AdminMessageController {
         log.info("Messages successfully sent!");
         return ResponseEntity.status(200).build();
     }
+
+
 }

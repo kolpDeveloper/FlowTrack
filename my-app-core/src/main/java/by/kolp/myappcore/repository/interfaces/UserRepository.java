@@ -1,21 +1,18 @@
 package by.kolp.myappcore.repository.interfaces;
 
 import by.kolp.myappcore.model.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    Page<User> streamAllByUsernameStartingWithIgnoreCase(Optional<String> username, Pageable pageable);
+    Page<User> streamAllByUsernameStartingWithIgnoreCase(String username, Pageable pageable);
 
     @Override
     void deleteById(Integer integer);

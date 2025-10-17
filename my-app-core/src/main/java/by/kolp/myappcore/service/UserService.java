@@ -34,7 +34,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public Page<User> streamAllByPrefix(Optional<String> prefixName, Pageable pageable) {
+    public Page<User> streamAllByPrefix(String prefixName, Pageable pageable) {
         return userRepository.streamAllByUsernameStartingWithIgnoreCase(prefixName, pageable);
     }
 
@@ -43,13 +43,13 @@ public class UserService {
     }
 
     public void deleteById(Integer id) {
-        findById(id);
-        userRepository.deleteById(id);
+        User user = findById(id)
+                .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
+        userRepository.deleteById(user.getId());
     }
 
-
-    public Page<UserRegistrationDTO> fetchUser(Optional<String> prefixName, Pageable pageable) {
-        Page<User> users = (prefixName.isPresent()
+    public Page<UserRegistrationDTO> fetchUser(String prefixName, Pageable pageable) {
+        Page<User> users = (!prefixName.isBlank()
                 ? (streamAllByPrefix(prefixName, pageable))
                 : streamAll(pageable));
 

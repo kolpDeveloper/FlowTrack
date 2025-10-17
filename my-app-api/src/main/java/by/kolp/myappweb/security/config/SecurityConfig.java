@@ -59,7 +59,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/send").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/sum/all").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/admin/send/to/all").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/send").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/send/bulk").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/message/**").permitAll()
 
                         .anyRequest().authenticated()

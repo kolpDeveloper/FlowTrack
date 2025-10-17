@@ -17,8 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -44,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping(FETCH_USERS)
-    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) Optional<String> prefixName,
+    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) String prefixName,
                                                                 @PageableDefault(size = 20, sort = "username") Pageable pageable) {
         Page<UserRegistrationDTO> result = userService.fetchUser(prefixName, pageable);
         log.info(result.toString());

@@ -1,4 +1,4 @@
-package by.kolp.myappproducer.controller;
+package by.kolp.myappproducer.producer;
 
 import by.kolp.myappproducer.dto.AdminEmailRequest;
 import by.kolp.myappproducer.service.MailSenderService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/message")
+@RequestMapping("/admin")
 public class RabbitMqController {
 
     private final MailSenderService mailSenderService;
@@ -20,8 +20,8 @@ public class RabbitMqController {
         this.mailSenderService = mailSenderService;
     }
 
-    @PostMapping("/bulk")
-    public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest email) {
+    @PostMapping("/send")
+    public ResponseEntity<String> send(@RequestBody AdminEmailRequest email) {
         mailSenderService.sendToQueue(email);
         return ResponseEntity.ok("Email sent to queue");
     }

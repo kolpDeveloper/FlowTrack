@@ -3,7 +3,6 @@ package by.kolp.myappproducer.service;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import by.kolp.myappproducer.dto.AdminEmailRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,12 +30,11 @@ public class MailSenderService {
     }
 
     public void sendToQueue(AdminEmailRequest email) {
-        rabbitTemplate.convertAndSend("mailQueue", email);
+        rabbitTemplate.convertAndSend("emailQueue", email);
         log.info("Email sent to queue");
     }
 
 
-    @RabbitListener
     public String send(Page<String> emails, String subject, String text) {
 
         if (emails == null) {
@@ -48,12 +46,11 @@ public class MailSenderService {
         int successfulEmails = 0;
         Page<String> emailsList = userRepository.findAllEmails(PageRequest.of(0,10));
 
-        for (String email : emailsList) {
+        for (String email : emailsList.getContent()) {
             if(email == null || email.isBlank()) {
                 log.warn("No recipients provided");
                 continue;
             }
-
 
         try{
             SimpleMailMessage message = createMessage(email, subject, text);
@@ -62,9 +59,7 @@ public class MailSenderService {
             log.info("Successfully sent to: {}", email);
         }catch (MailException e){
             log.error("Failed sent to: {}", email, e);
-            failedEmails++;
-            }
-        }
+            failedEmails++;}}
 
         return "Failed attemps: " + failedEmails + ", successful emails: " + successfulEmails;
     }
