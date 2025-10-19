@@ -20,11 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Page<User> streamAll(Pageable pageable);
 
-    @Query(
-            value = "select u.email from User u",
-            countQuery = "select count(u) from User u"
-    )
-    Page<String> findAllEmails(Pageable pageable);
+
 
     @Override
     <S extends User> S save(S entity);

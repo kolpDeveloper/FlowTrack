@@ -1,7 +1,8 @@
 package by.kolp.myappproducer.service;
 
-import by.kolp.myappcore.repository.interfaces.UserRepository;
+
 import by.kolp.myappproducer.dto.AdminEmailRequest;
+import by.kolp.myappproducer.market.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,15 +19,15 @@ public class MailSenderService {
 
     private final RabbitTemplate rabbitTemplate;
     private final JavaMailSender mailSender;
-    private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
 
     @Value("${spring.mail.username}")
     private String from;
 
-    public MailSenderService(JavaMailSender mailSender, RabbitTemplate rabbitTemplate, UserRepository userRepository) {
+    public MailSenderService(JavaMailSender mailSender, RabbitTemplate rabbitTemplate, MessageRepository messageRepository) {
         this.mailSender = mailSender;
         this.rabbitTemplate = rabbitTemplate;
-        this.userRepository = userRepository;
+        this.messageRepository = messageRepository;
     }
 
     public void sendToQueue(AdminEmailRequest email) {
@@ -44,7 +45,7 @@ public class MailSenderService {
 
         int failedEmails = 0;
         int successfulEmails = 0;
-        Page<String> emailsList = userRepository.findAllEmails(PageRequest.of(0,10));
+        Page<String> emailsList = messageRepository.findAllEmails(PageRequest.of(0,10));
 
         for (String email : emailsList.getContent()) {
             if(email == null || email.isBlank()) {
@@ -64,11 +65,11 @@ public class MailSenderService {
         return "Failed attemps: " + failedEmails + ", successful emails: " + successfulEmails;
     }
 
-    private SimpleMailMessage createMessage(String to, String subject, String text) {
+    private SimpleMailMessage createMessage(String toEmail, String subject, String text) {
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(from);
-            message.setTo(to);
+            message.setTo(toEmail);
             message.setSubject(subject);
             message.setText(text);
             return message;
