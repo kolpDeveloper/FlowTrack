@@ -29,32 +29,27 @@ public class SecurityConfig {
 
 
         http
-                .csrf(csrf -> csrf.disable()) // Отключаем CSRF для API
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Swagger endpoints
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
                         .requestMatchers("/webjars/**").permitAll()
 
-                        // Auth endpoints
                         .requestMatchers(HttpMethod.POST, "/auth/registration").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 
-                        // User endpoints
                         .requestMatchers(HttpMethod.DELETE, "/api/user/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/user/**").permitAll()
 
-                        // Calculate endpoints
                         .requestMatchers(HttpMethod.POST, "/api/value").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/value/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/value/sum").permitAll()
 
-                        // Other endpoints
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/send").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/sum/all").permitAll()

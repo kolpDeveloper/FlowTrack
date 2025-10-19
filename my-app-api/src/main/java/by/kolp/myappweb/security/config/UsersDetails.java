@@ -2,12 +2,11 @@ package by.kolp.myappweb.security.config;
 
 import by.kolp.myappcore.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class UsersDetails implements UserDetails {
 
@@ -19,10 +18,7 @@ public class UsersDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-        /*return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .collect(Collectors.toList());*/
+        return List.of();
     }
 
     @Override

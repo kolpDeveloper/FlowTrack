@@ -35,6 +35,7 @@ public class CustomErrorController implements ErrorController {
 
         return ResponseEntity
                 .status(attributes.get("status") != null ? (Integer) attributes.get("status") : 500)
+                .header(request.getRequestURI(), attributes.get("message") != null ? (String) attributes.get("message") : "")
                 .body(ErrorDto.builder()
                         .error((String) attributes.get("error"))
                         .errorDescription((String) attributes.get("message"))
