@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/api")
 @RestController
 public class UserController {
 
@@ -28,10 +27,10 @@ public class UserController {
     RegistrationService registrationService;
 
 
-    public static final String CREATE_USER = "/user";
-    public static final String EDIT_USER = "/user/{user_id}";
-    public static final String FETCH_USERS = "/user";
-    public static final String DELETE_USER = "/user/{user_id}";
+    public static final String CREATE_USER = "/api/user";
+    public static final String EDIT_USER = "/api/user/{user_id}";
+    public static final String FETCH_USERS = "/api/user";
+    public static final String DELETE_USER = "/api/user/{user_id}";
 
 
     @DeleteMapping(value = DELETE_USER)
