@@ -5,22 +5,22 @@ spring:
   # Database Configuration
   datasource:
     url: jdbc:postgresql://localhost:5432/flow-track
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
 
-    hikari:
-      driver-class-name: org.postgresql.Driver
-      username: postgres
-      password: root
+  # FlyWay configuration
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    user: postgres
+    password: root
 
   # JPA Configuration
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-  # H2 Console (для разработки)
-  #h2:
-   # console:
-   #   enabled: true
 
   # RabbitMQ Configuration
   rabbitmq:
@@ -29,16 +29,15 @@ spring:
     username: guest
     password: guest
 
-# Server Configuration
-
+  # Mail Configuration
   mail:
     username: rerrr0870@gmail.com
     password: cada gmgs ybua mwou
     properties:
       mail:
-        port: 587
         smtp:
           host: smtp.gmail.com
+          port: 587
           auth: true
           starttls:
             enable: true
@@ -46,16 +45,10 @@ spring:
 server:
   port: 8080
 
-
-
-
-# Security Configuration
-
 jwt:
   secret: hello
   expiration: PT1H
 
-# RabbitMQ Queues (из вашего producer модуля)
 rabbitmq:
   queue:
     name: FirstQueue
@@ -71,11 +64,9 @@ rabbitmq:
   queue_with_delay:
     name: hello_world_delay_queue
 
-# User Service Client
 user-service:
   base-url: http://localhost:8080
 
-# Logging
 logging:
   level:
     root: INFO

@@ -29,6 +29,7 @@ public class User {
             sequenceName = "users_seq",
             allocationSize = 1
     )
+    @Column(name = "id")
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 40)
@@ -42,6 +43,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
     private Role role = Role.USER;
 
     @CreationTimestamp

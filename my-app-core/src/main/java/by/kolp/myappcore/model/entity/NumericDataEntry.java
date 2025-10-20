@@ -26,11 +26,16 @@ public class NumericDataEntry {
             sequenceName = "numeric_data_entry_seq",
             allocationSize = 1
     )
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "key")
     private String key;
+
+    @Column(name = "value")
     private Integer value;
 
     @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
 }
