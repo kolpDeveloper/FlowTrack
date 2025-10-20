@@ -1,6 +1,7 @@
 package by.kolp.myappcore.service;
 
 import by.kolp.myappcore.exceptions.BadRequestException;
+import by.kolp.myappcore.exceptions.NotFoundException;
 import by.kolp.myappcore.mapper.NumericMapper;
 import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static java.lang.String.format;
+
 @Service
 @RequiredArgsConstructor
 public class NumericDataEntryService {
@@ -17,25 +20,23 @@ public class NumericDataEntryService {
     private final NumericDataEntryRepository numericDataEntryRepository;
     private final NumericMapper numericMapper;
 
-    public NumericDataEntryDTO createNumericDataEntry(NumericDataEntryDTO numericDataEntryDTO) {
+    public void createNumericDataEntry(NumericDataEntryDTO numericDataEntryDTO) {
         if (numericDataEntryDTO.value() == null) {
             throw new BadRequestException("Value is required.");
         }
 
         NumericDataEntry newEntry = numericMapper.toEntity(numericDataEntryDTO);
         NumericDataEntry savedEntry = numericDataEntryRepository.save(newEntry);
-        return numericMapper.toDto(savedEntry);
+        numericMapper.toDto(savedEntry);
     }
 
     public Long getTotalSum() {
         return Optional.ofNullable(numericDataEntryRepository.getTotalSum()).orElse(0L);
     }
 
-    public Optional<NumericDataEntry> findById(Long id) {
-        return numericDataEntryRepository.findById(id);
-    }
-
-    public void delete(NumericDataEntry entity) {
-        numericDataEntryRepository.delete(entity);
+    public void deleteById(Long id) {
+        NumericDataEntry entry = numericDataEntryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
+        numericDataEntryRepository.deleteById(entry.getId());
     }
 }

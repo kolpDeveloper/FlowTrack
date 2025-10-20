@@ -5,7 +5,6 @@ import by.kolp.myappcore.model.dto.UserRegistrationDTO;
 import by.kolp.myappcore.model.dto.UsernameDto;
 import by.kolp.myappcore.service.RegistrationService;
 import by.kolp.myappcore.service.UserService;
-import by.kolp.myappweb.dto.AckDTO;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,10 +35,10 @@ public class UserController {
 
 
     @DeleteMapping(value = DELETE_USER)
-    public AckDTO deleteUser(@PathVariable("user_id") Integer userId) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteUser(@PathVariable("user_id") Integer userId) {
         userService.deleteById(userId);
         log.info("Deleted user with id {}", userId);
-        return new AckDTO("User successfully deleted", true);
     }
 
     @GetMapping(FETCH_USERS)
@@ -51,10 +51,11 @@ public class UserController {
 
 
     @PostMapping(CREATE_USER)
-    public ResponseEntity<UserRegistrationDTO> register(@RequestBody @Valid UserCreatingRequestDTO request)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void register(@RequestBody @Valid UserCreatingRequestDTO request)
     {
-        log.info("Request body: {}", request.username());
-        return ResponseEntity.ok(registrationService.register(request));
+        registrationService.register(request);
+        log.info("Created username: {}", request.username());
     }
 
     @PatchMapping(EDIT_USER)
@@ -63,6 +64,8 @@ public class UserController {
     {
         UserRegistrationDTO savedUser = userService.edit(userId, request);
         log.info("User:{} successfully edited!", savedUser);
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body(savedUser);
     }
 }
