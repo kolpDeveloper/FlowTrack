@@ -3,10 +3,8 @@ package by.kolp.myappcore.model.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 
 
-@Builder
 public record UserCreatingRequestDTO(@NotEmpty(message = "Username cannot be empty")
                                      @Size(min = 2, max = 30)
                                      String username,

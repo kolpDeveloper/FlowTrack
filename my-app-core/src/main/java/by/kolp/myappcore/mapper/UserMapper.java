@@ -3,18 +3,15 @@ package by.kolp.myappcore.mapper;
 import by.kolp.myappcore.model.dto.UserCreatingRequestDTO;
 import by.kolp.myappcore.model.dto.UserRegistrationDTO;
 import by.kolp.myappcore.model.entity.User;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE, builder = @Builder(disableBuilder = true))
     User toUser(UserCreatingRequestDTO dto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE, builder = @Builder(disableBuilder = true))
     UserRegistrationDTO toRegistrationDTO(User user);
 }
