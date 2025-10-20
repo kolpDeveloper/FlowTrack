@@ -20,8 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u")
     Page<User> streamAll(Pageable pageable);
 
-
-
     @Override
     <S extends User> S save(S entity);
 

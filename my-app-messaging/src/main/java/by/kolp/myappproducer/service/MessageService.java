@@ -1,6 +1,6 @@
 package by.kolp.myappproducer.service;
 
-import by.kolp.myappproducer.market.repository.MessageRepository;
+import by.kolp.myappproducer.model.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

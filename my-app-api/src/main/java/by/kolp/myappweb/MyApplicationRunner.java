@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappcore",
         "by.kolp.myappproducer"
 })
-@EntityScan(basePackages = {"by.kolp.myappcore.model.entity", "by.kolp.myappproducer.market.entity"})
+@EntityScan(basePackages = {"by.kolp.myappcore.model.entity", "by.kolp.myappproducer.model.entity"})
 @ComponentScan(basePackages = {
         "by.kolp.myappweb.controller",
         "by.kolp.myappweb.security",
@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappproducer.service",
         "by.kolp.myappproducer.config"
 })
-@EnableJpaRepositories(basePackages = {"by.kolp.myappcore.repository", "by.kolp.myappproducer.market.repository"} )
+@EnableJpaRepositories(basePackages = {"by.kolp.myappcore.repository", "by.kolp.myappproducer.model.repository"} )
 public class MyApplicationRunner {
     public static void main(String[] args) {
         SpringApplication.run(MyApplicationRunner.class, args);

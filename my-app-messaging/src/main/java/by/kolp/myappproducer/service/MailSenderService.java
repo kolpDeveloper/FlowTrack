@@ -2,8 +2,9 @@ package by.kolp.myappproducer.service;
 
 
 import by.kolp.myappproducer.dto.AdminEmailRequest;
-import by.kolp.myappproducer.market.repository.MessageRepository;
+import by.kolp.myappproducer.model.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class MailSenderService {
     }
 
 
+    @RabbitListener
     public String send(Page<String> emails, String subject, String text) {
 
         if (emails == null) {

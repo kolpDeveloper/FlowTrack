@@ -20,6 +20,41 @@
 
 
         <dependencies>
+
+            <dependency>
+                <groupId>by.kolp</groupId>
+                <artifactId>my-app-messaging</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>by.kolp</groupId>
+                <artifactId>my-app-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.38</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.6.3</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>1.6.3</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
             <dependency>
                 <groupId>com.auth0</groupId>
@@ -32,18 +67,6 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-crypto</artifactId>
                 <version>6.5.3</version>
-            </dependency>
-
-            <dependency>
-                <groupId>by.kolp</groupId>
-                <artifactId>my-app-messaging</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>by.kolp</groupId>
-                <artifactId>my-app-core</artifactId>
-                <version>1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -77,21 +100,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>1.6.3</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>1.6.3</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -111,13 +119,6 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>6.5.3</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.38</version>
-                <scope>provided</scope>
             </dependency>
 
         </dependencies>

@@ -1,4 +1,4 @@
-package by.kolp.myappproducer.market.entity;
+package by.kolp.myappproducer.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
