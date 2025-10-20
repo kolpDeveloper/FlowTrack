@@ -17,7 +17,4 @@ public interface NumericDataEntryRepository extends JpaRepository<NumericDataEnt
 
     @Override
     <S extends NumericDataEntry> S saveAndFlush( S entity);
-
-    @Override
-    void delete(@NonNull NumericDataEntry entity);
 }
