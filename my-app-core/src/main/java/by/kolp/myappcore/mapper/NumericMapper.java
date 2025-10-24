@@ -8,11 +8,8 @@ import org.mapstruct.*;
 public interface NumericMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE, builder = @Builder(disableBuilder = true))
-    NumericDataEntryDTO map(NumericDataEntry entry);
-
-    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE, builder = @Builder(disableBuilder = true))
     NumericDataEntry toEntity(NumericDataEntryDTO dto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE, builder = @Builder(disableBuilder = true))
+    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)
     NumericDataEntryDTO toDto(NumericDataEntry entry);
 }

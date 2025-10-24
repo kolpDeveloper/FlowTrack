@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 
@@ -16,7 +17,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "numeric_data_entry")
-public class NumericDataEntry {
+public class NumericDataEntry implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,

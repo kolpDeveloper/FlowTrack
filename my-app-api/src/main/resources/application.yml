@@ -19,7 +19,7 @@ spring:
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
   # RabbitMQ Configuration
@@ -28,6 +28,14 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+  #Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+
 
   # Mail Configuration
   mail:

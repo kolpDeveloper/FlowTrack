@@ -7,6 +7,9 @@ import by.kolp.myappcore.model.dto.NumericDataEntryDTO;
 import by.kolp.myappcore.model.entity.NumericDataEntry;
 import by.kolp.myappcore.repository.interfaces.NumericDataEntryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,12 +17,14 @@ import java.util.Optional;
 import static java.lang.String.format;
 
 @Service
+@CacheConfig(cacheNames = "data" )
 @RequiredArgsConstructor
 public class NumericDataEntryService {
 
     private final NumericDataEntryRepository numericDataEntryRepository;
     private final NumericMapper numericMapper;
 
+    @CacheEvict(key = "'totalSumValue'", allEntries = true)
     public void createNumericDataEntry(NumericDataEntryDTO numericDataEntryDTO) {
         if (numericDataEntryDTO.value() == null) {
             throw new BadRequestException("Value is required.");
@@ -30,10 +35,12 @@ public class NumericDataEntryService {
         numericMapper.toDto(savedEntry);
     }
 
+    @Cacheable(key = "'totalSumValue'")
     public Long getTotalSum() {
         return Optional.ofNullable(numericDataEntryRepository.getTotalSum()).orElse(0L);
     }
 
+    @CacheEvict(key = "'totalSumValue'")
     public void deleteById(Long id) {
         NumericDataEntry entry = numericDataEntryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));

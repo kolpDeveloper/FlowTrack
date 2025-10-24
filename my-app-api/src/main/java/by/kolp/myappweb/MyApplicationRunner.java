@@ -3,9 +3,11 @@ package by.kolp.myappweb;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+@EnableCaching
 @SpringBootApplication(scanBasePackages = {
         "by.kolp.myappweb",
         "by.kolp.myappcore",
