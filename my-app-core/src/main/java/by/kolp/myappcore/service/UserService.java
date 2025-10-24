@@ -45,6 +45,7 @@ public class UserService {
     public void deleteById(Integer id) {
         User user = findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
+
         userRepository.deleteById(user.getId());
     }
 
