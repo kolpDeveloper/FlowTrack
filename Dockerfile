@@ -12,7 +12,8 @@ run mvn clean package -DskipTests
 FROM eclipse-temurin:22-jre
 WORKDIR /app
 
-COPY --from=build /app/my-app-api/target/*.jar app.jar
+# Копируем только исполняемый JAR (не .original)
+COPY --from=build /app/my-app-api/target/my-app-api-*.jar app.jar
 
 EXPOSE 8080
 

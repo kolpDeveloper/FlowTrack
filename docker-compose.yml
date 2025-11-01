@@ -5,64 +5,89 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: flowtrack-app
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
-      - rabbitmq
-      - redis
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
+      - JWT_SECRET=MATSUMOTO
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+    restart: on-failure:5
     networks:
       - app-network
 
   postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: flow-track
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - app-network
+      image: postgres:15-alpine
+      environment:
+        POSTGRES_DB: flow-track
+        POSTGRES_USER: postgres
+        POSTGRES_HOST_AUTH_METHOD: trust
+      ports:
+        - "5433:5432"
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U postgres -d flow-track" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+        start_period: 10s
+      networks:
+        - app-network
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-    networks:
-      - app-network
+      image: rabbitmq:3.13-management
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+      environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+      volumes:
+        - rabbitmq-data:/var/lib/rabbitmq
+      healthcheck:
+        test: [ "CMD-SHELL", "rabbitmq-diagnostics check_port_connectivity" ]
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 40s
+      restart: unless-stopped
+      networks:
+        - app-network
 
   redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes
-    networks:
-      - app-network
+      image: redis:7-alpine
+      ports:
+        - "6379:6379"
+      volumes:
+        - redis-data:/data
+      command: redis-server --appendonly yes
+      healthcheck:
+        test: [ "CMD", "redis-cli", "ping" ]
+        interval: 5s
+        timeout: 3s
+        retries: 5
+      networks:
+        - app-network
 
 volumes:
-  postgres-data:
-  rabbitmq-data:
-  redis-data:
+    postgres-data:
+    rabbitmq-data:
+    redis-data:
 
 networks:
-  app-network:
-    driver: bridge
+    app-network:
+      driver: bridge
