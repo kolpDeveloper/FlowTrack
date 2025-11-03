@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping(FETCH_USERS)
-    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false) String prefixName,
+    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false, defaultValue = "") String prefixName,
                                                                 @PageableDefault(size = 20, sort = "username") Pageable pageable) {
         Page<UserRegistrationDTO> result = userService.fetchUser(prefixName, pageable);
         log.info(result.toString());

@@ -47,19 +47,20 @@ public class UserService {
         User user = findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
 
-        if(!user.getRole().equals("admin")) {
+        if(!user.getRole().name().equals("ADMIN")) {
             throw new BadRequestException(format("User %s is not admin", user));
         }
         userRepository.deleteById(user.getId());
     }
 
     public Page<UserRegistrationDTO> fetchUser(String prefixName, Pageable pageable) {
-        Page<User> users = (!prefixName.isBlank()
-                ? (streamAllByPrefix(prefixName, pageable))
-                : streamAll(pageable));
+            Page<User> users = Optional.ofNullable(prefixName)
+                    .filter(prefix -> !prefix.isBlank())
+                    .map(prefix -> streamAllByPrefix(prefix, pageable))
+                    .orElse(streamAll(pageable));
 
-        log.info(users.toString());
-        return users.map(userMapper::toRegistrationDTO);
+            log.info(users.toString());
+            return users.map(userMapper::toRegistrationDTO);
     }
 
     @Transactional
@@ -69,14 +70,14 @@ public class UserService {
         findByUsername(user.username())
                 .filter(anotherUser -> !Objects.equals(anotherUser.getId(), id))
                 .ifPresent(anotherUser -> {
-                    throw new BadRequestException(format("User \"%s\" already exists.", user.username()));
+                    throw new BadRequestException(format("User \"%s\" already exists.", anotherUser.getUsername()));
                 });
 
         User newUser = findById(id).orElseThrow(() ->
                 new NotFoundException("User not found!"));
 
         newUser.setUsername(user.username());
-        User saved = userRepository.save(newUser);
-        return userMapper.toRegistrationDTO(saved);
+        User savedUser = userRepository.save(newUser);
+        return userMapper.toRegistrationDTO(savedUser);
     }
 }
