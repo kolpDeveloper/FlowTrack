@@ -15,14 +15,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping()
 public class AuthController {
 
     private final JWTUtil jwtUtil;
     private final RegistrationService registrationService;
 
 
-    @PostMapping("/registration")
+    @PostMapping("/auth/registration")
     public Map<@NotNull String, @NotNull String> performRegistration(@RequestBody @Valid UserCreatingRequestDTO registration) {
 
         registrationService.register(registration);
