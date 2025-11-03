@@ -17,6 +17,7 @@ public class CalculateController {
 
     private static final String CREATE_VALUE = "/api/value";
     private static final String DELETE_VALUE = "/api/value/{id}";
+    private static final String GET_VALUE = "/api/value/sum";
 
 
     @PostMapping(CREATE_VALUE)
@@ -32,7 +33,7 @@ public class CalculateController {
         numericDataEntryService.deleteById(id);
     }
 
-    @GetMapping("/api/value/sum")
+    @GetMapping(GET_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Long getTotalSum() {
         log.info("Getting total sum");
