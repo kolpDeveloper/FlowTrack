@@ -46,6 +46,10 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role = Role.USER;
 
+    public boolean isAdmin(){
+        return this.role == Role.ADMIN;
+    };
+
     @CreationTimestamp
     @Column(nullable = false, name = "created_at", updatable = false)
     private Instant createdAt;

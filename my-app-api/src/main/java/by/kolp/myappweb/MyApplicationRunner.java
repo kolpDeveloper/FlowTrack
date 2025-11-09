@@ -24,7 +24,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappproducer.producer",
         "by.kolp.myappproducer.consumer",
         "by.kolp.myappproducer.service",
-        "by.kolp.myappproducer.config"
+        "by.kolp.myappproducer.config",
+        "by.kolp.myappcore.jwt"
 })
 @EnableJpaRepositories(basePackages = {"by.kolp.myappcore.repository", "by.kolp.myappproducer.model.repository"} )
 public class MyApplicationRunner {

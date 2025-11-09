@@ -20,6 +20,7 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+
     @Transactional
     public UserRegistrationDTO register(UserCreatingRequestDTO request) {
         User newUser = userMapper.toUser(request);
