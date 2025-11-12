@@ -1,5 +1,6 @@
 package by.kolp.myappweb.security;
 
+import by.kolp.myappcore.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

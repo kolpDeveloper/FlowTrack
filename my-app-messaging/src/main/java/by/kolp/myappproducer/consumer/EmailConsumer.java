@@ -22,7 +22,4 @@ public class EmailConsumer {
         log.info("Email received!");
         mailSender.send(email.getTo(), email.getSubject(), email.getMessage());
     }
-
-
-
 }
