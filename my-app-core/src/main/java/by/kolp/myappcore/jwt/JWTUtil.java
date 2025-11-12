@@ -14,13 +14,13 @@ import java.time.Instant;
 import java.util.Date;
 
 @Component
-@Getter
 public class JWTUtil {
 
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration:PT1H}")
+    @Getter
     private Duration tokenExpiration;
 
     public String generateToken(String username) {

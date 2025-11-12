@@ -39,4 +39,7 @@ public class NumericDataEntry implements Serializable {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt = Instant.now();
+
+    @OneToOne(mappedBy = "numericDataEntry", cascade = CascadeType.ALL)
+    private Category category;
 }

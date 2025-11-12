@@ -14,11 +14,13 @@ public record AuthResponseDTO(
 
         String username,
 
-        String role
+        String role,
+
+        String refreshToken
 
 ) {
-        public AuthResponseDTO(String accessToken, Long expiresIn, String username, String role) {
-                this(accessToken, expiresIn, "Bearer", username, role);
+        public AuthResponseDTO(String accessToken, Long expiresIn, String username, String role, String refreshToken) {
+                this(accessToken, expiresIn, "Bearer", username, role, refreshToken);
         }
 }
 

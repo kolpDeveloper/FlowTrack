@@ -6,7 +6,6 @@ import by.kolp.myappcore.mapper.UserMapper;
 import by.kolp.myappcore.model.dto.UserRegistrationDTO;
 import by.kolp.myappcore.model.dto.UsernameDto;
 import by.kolp.myappcore.model.entity.User;
-import by.kolp.myappcore.model.enums.Role;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +47,7 @@ public class UserService {
         User user = findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
 
-        if(user.getRole() == Role.ADMIN) {
+        if(user.isAdmin()) {
             throw new BadRequestException(format("User %s is not admin", user));
         }
         userRepository.deleteById(user.getId());

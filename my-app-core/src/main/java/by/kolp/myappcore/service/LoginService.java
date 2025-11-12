@@ -4,6 +4,7 @@ import by.kolp.myappcore.exceptions.BadRequestException;
 import by.kolp.myappcore.jwt.JWTUtil;
 import by.kolp.myappcore.model.dto.AuthResponseDTO;
 import by.kolp.myappcore.model.dto.LoginRequestDTO;
+import by.kolp.myappcore.model.dto.RefreshTokenDTO;
 import by.kolp.myappcore.model.entity.RefreshToken;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.repository.interfaces.UserRepository;
@@ -31,8 +32,11 @@ public class LoginService {
     @Transactional
     public AuthResponseDTO login(LoginRequestDTO loginRequest) {
         User user = userRepository.findByUsername(loginRequest.username())
-                .orElseThrow(() -> new BadRequestException("Username already exists!"));
+                .orElseThrow(() -> new BadRequestException("Invalid username or password!"));
 
+        if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+            throw new BadRequestException("Invalid password!");
+        }
     user.setLastLoginAt(Instant.now());
     userRepository.save(user);
 
@@ -47,5 +51,17 @@ public class LoginService {
                 user.getRole().name(),
                 refreshToken.getToken()
         );
+    }
+
+    public AuthResponseDTO refreshToken(RefreshTokenDTO refreshTokenRequest) {
+
+        RefreshToken token = refreshTokenService.verifyRefreshToken(refreshTokenRequest.refreshToken());
+        User user = token.getUser();
+
+        String newAccessToken = jwtUtil.generateToken(user.getUsername());
+        Long expiresIn = jwtUtil.getTokenExpiration().getSeconds();
+
+
+        return new AuthResponseDTO(newAccessToken, expiresIn, user.getUsername(), user.getRole().name(), token.getToken());
     }
 }

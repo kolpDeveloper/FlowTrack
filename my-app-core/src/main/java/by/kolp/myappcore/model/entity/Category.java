@@ -35,6 +35,10 @@ public class Category {
     @CreationTimestamp
     private Instant createdAt;
 
+    @OneToOne
+    @JoinColumn(name = "numeric_data_entry_id")
+    private NumericDataEntry numericDataEntry;
+
 
     @Override
     public boolean equals(Object o) {

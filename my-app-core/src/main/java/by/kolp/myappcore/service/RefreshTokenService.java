@@ -1,6 +1,7 @@
 package by.kolp.myappcore.service;
 
 import by.kolp.myappcore.exceptions.BadRequestException;
+import by.kolp.myappcore.model.dto.RefreshTokenDTO;
 import by.kolp.myappcore.model.entity.RefreshToken;
 import by.kolp.myappcore.model.entity.User;
 import by.kolp.myappcore.repository.interfaces.RefreshTokenRepository;
@@ -51,23 +52,22 @@ public class RefreshTokenService {
             refreshTokenRepository.delete(token);
             throw new BadRequestException("Token expired");
         }
-
         return token;
     }
 
     @Transactional
-    public RefreshToken revokeRefreshToken(String refreshToken) {
-        RefreshToken token = refreshTokenRepository.findByToken(refreshToken)
+    public void revokeRefreshToken(RefreshTokenDTO refreshToken) {
+        RefreshToken token = refreshTokenRepository.findByToken(refreshToken.toString())
                 .orElseThrow(() -> new BadRequestException("Invalid refresh token"));
 
         token.setRevoked(true);
-        return refreshTokenRepository.save(token);
+        refreshTokenRepository.save(token);
     }
 
+    @Transactional
     public void cleanUpRefreshToken() {
         refreshTokenRepository.deleteExpiredToken();
         log.info("Cleaned up refresh token");
     }
-
 
 }
