@@ -44,11 +44,11 @@ public class RefreshTokenService {
         RefreshToken token = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new BadRequestException("Invalid refresh token"));
 
-        if(token.isRevoked()){
+        if (token.isRevoked()) {
             throw new BadRequestException("Token is revoked");
         }
 
-        if (token.isExpired()){
+        if (token.isExpired()) {
             refreshTokenRepository.delete(token);
             throw new BadRequestException("Token expired");
         }
