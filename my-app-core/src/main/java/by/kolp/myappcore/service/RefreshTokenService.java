@@ -57,7 +57,7 @@ public class RefreshTokenService {
 
     @Transactional
     public void revokeRefreshToken(RefreshTokenDTO refreshToken) {
-        RefreshToken token = refreshTokenRepository.findByToken(refreshToken.toString())
+        RefreshToken token = refreshTokenRepository.findByToken(refreshToken.refreshToken())
                 .orElseThrow(() -> new BadRequestException("Invalid refresh token"));
 
         token.setRevoked(true);
