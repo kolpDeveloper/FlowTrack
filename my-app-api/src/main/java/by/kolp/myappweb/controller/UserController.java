@@ -41,8 +41,7 @@ public class UserController {
     }
 
     @GetMapping(FETCH_USERS)
-    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false, defaultValue = "") String prefixName,
-                                                                @PageableDefault(size = 20, sort = "username") Pageable pageable) {
+    public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false, defaultValue = "") String prefixName, @PageableDefault(size = 20, sort = "username") Pageable pageable) {
         Page<UserRegistrationDTO> result = userService.fetchUser(prefixName, pageable);
         log.info(result.toString());
         return ResponseEntity.ok(result);
@@ -51,20 +50,15 @@ public class UserController {
 
     @PostMapping(CREATE_USER)
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody @Valid UserCreatingRequestDTO request)
-    {
+    public void register(@RequestBody @Valid UserCreatingRequestDTO request) {
         registrationService.register(request);
         log.info("Created username: {}", request.username());
     }
 
     @PatchMapping(EDIT_USER)
-    public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") Integer userId,
-                                                            @RequestBody @Valid UsernameDto request)
-    {
+    public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") Integer userId, @RequestBody @Valid UsernameDto request) {
         UserRegistrationDTO savedUser = userService.edit(userId, request);
         log.info("User:{} successfully edited!", savedUser);
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .body(savedUser);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedUser);
     }
 }
