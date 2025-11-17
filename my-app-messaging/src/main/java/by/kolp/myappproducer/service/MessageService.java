@@ -1,13 +1,12 @@
 package by.kolp.myappproducer.service;
 
 import by.kolp.myappproducer.dto.EmailSendingResult;
-import by.kolp.myappproducer.dto.SubjectMessageDTO;
 import by.kolp.myappproducer.model.repository.MessageRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,20 +26,9 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final JavaMailSender mailSender;
-    private final RabbitTemplate rabbitTemplate;
 
-    public Page<String> findAllEmails(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
-        return messageRepository.findAllEmails(pageable);
-    }
-
-
-    private void sendToQueue(SubjectMessageDTO message) {
-        log.info("Sending message to queue {}", message.subject());
-        rabbitTemplate.convertAndSend(message);
-    }
-
-
+    @Value("${spring.mail.from}")
+    private String from;
 
     public EmailSendingResult sendHtmlMessage(String subject, String htmlContent){
         int page = 0;
@@ -50,12 +38,22 @@ public class MessageService {
         int failedEmail = 0;
         List<String> failedAddress = new ArrayList<>();
 
+
         do {
             Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
             emails = messageRepository.findAllEmails(pageable);
 
             if (emails.isEmpty()) {
                 break;
+            }
+
+
+            if(subject.isBlank() || subject.trim().isEmpty()) {
+                throw new IllegalArgumentException("Subject cannot be empty");
+            }
+
+            if(htmlContent.isBlank() || htmlContent.trim().isEmpty()){
+                throw new IllegalArgumentException("HtmlContent cannot be empty");
             }
 
 
@@ -67,7 +65,7 @@ public class MessageService {
                 try {
                     MimeMessage mimeMessage = mailSender.createMimeMessage();
                     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
-                    mimeMessageHelper.setFrom("admin");
+                    mimeMessageHelper.setFrom(from);
                     mimeMessageHelper.setTo(email);
                     mimeMessageHelper.setSubject(subject);
                     mimeMessageHelper.setText(htmlContent, true);
