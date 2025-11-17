@@ -48,7 +48,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
 
         if(user.isAdmin()) {
-            throw new BadRequestException(format("User %s is not admin", user));
+            throw new BadRequestException(format("Cannot delete admin user", user));
         }
         userRepository.deleteById(user.getId());
     }

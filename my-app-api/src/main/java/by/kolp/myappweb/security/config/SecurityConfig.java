@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/admin/send/bulk").permitAll()
                         .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/message/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/send/bulk/html").permitAll()
 
                         .anyRequest().authenticated()
                 )
