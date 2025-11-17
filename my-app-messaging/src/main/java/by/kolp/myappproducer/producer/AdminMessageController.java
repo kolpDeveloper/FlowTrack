@@ -1,6 +1,7 @@
 package by.kolp.myappproducer.producer;
 
 import by.kolp.myappproducer.dto.AdminEmailRequest;
+import by.kolp.myappproducer.dto.SubjectMessageDTO;
 import by.kolp.myappproducer.service.MailSenderService;
 import by.kolp.myappproducer.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,11 @@ public class AdminMessageController {
         mailSenderService.send(emails, request.getSubject(), request.getMessage());
         log.info("Messages successfully sent!");
         return ResponseEntity.status(200).build();
+    }
+
+    @PostMapping("/admin/send/bulk/html")
+    public void sendHtml(@RequestBody SubjectMessageDTO request){
+        mailSenderService.sendToQueue(request);
     }
 
 

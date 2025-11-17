@@ -16,9 +16,9 @@ public class RabbitMqController {
 
     private final MailSenderService mailSenderService;
 
-    @PostMapping("/admin/send")
+   /* @PostMapping("/admin/send")
     public ResponseEntity<String> send(@RequestBody AdminEmailRequest email) {
         mailSenderService.sendToQueue(email);
         return ResponseEntity.ok("Email sent to queue");
-    }
+    }*/
 }

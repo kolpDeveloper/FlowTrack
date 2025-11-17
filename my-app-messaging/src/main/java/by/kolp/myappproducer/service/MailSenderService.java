@@ -2,6 +2,7 @@ package by.kolp.myappproducer.service;
 
 
 import by.kolp.myappproducer.dto.AdminEmailRequest;
+import by.kolp.myappproducer.dto.SubjectMessageDTO;
 import by.kolp.myappproducer.model.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -31,7 +32,7 @@ public class MailSenderService {
         this.messageRepository = messageRepository;
     }
 
-    public void sendToQueue(AdminEmailRequest email) {
+    public void sendToQueue(SubjectMessageDTO email) {
         rabbitTemplate.convertAndSend("emailQueue", email);
         log.info("Email sent to queue");
     }
@@ -40,18 +41,20 @@ public class MailSenderService {
     @RabbitListener
     public String send(Page<String> emails, String subject, String text) {
 
-        if (emails == null) {
+        if (emails.isEmpty()) {
             log.warn("Email list is empty, nothing to send");
             return "List of emails is empty";
         }
 
         int failedEmails = 0;
         int successfulEmails = 0;
-        Page<String> emailsList = messageRepository.findAllEmails(PageRequest.of(0,10));
+        emails = messageRepository.findAllEmails(PageRequest.of(0,10));
 
-        for (String email : emailsList.getContent()) {
+
+
+        for (String email : emails.getContent()) {
             if(email == null || email.isBlank()) {
-                log.warn("No recipients provided");
+                log.warn("No recipients  provided");
                 continue;
             }
 

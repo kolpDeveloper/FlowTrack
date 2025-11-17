@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "by.kolp.myappcore.mapper",
         "by.kolp.myappcore.service",
         "by.kolp.myappcore.repository",
+        "by.kolp.myappproducer.model.repository",
         "by.kolp.myappcore.model.entity",
         "by.kolp.myappproducer.producer",
         "by.kolp.myappproducer.consumer",
