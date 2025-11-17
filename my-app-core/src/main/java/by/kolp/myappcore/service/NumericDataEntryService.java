@@ -24,7 +24,7 @@ public class NumericDataEntryService {
     private final NumericDataEntryRepository numericDataEntryRepository;
     private final NumericMapper numericMapper;
 
-    @CacheEvict(value = "'totalSumValue'", allEntries = true, beforeInvocation = true)
+    @CacheEvict(value = "data", allEntries = true, beforeInvocation = true)
     public void createNumericDataEntry(NumericDataEntryDTO numericDataEntryDTO) {
         if (numericDataEntryDTO.value() == null) {
             throw new BadRequestException("Value is required.");
