@@ -30,7 +30,10 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi actuatorApi() {
-        return GroupedOpenApi.builder().group("actuator").pathsToMatch("/actuator/**").build();
+        return GroupedOpenApi.builder()
+                .group("actuator")
+                .pathsToMatch("/actuator/**")
+                .build();
     }
 
 

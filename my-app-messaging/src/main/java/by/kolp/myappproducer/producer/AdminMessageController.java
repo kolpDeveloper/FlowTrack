@@ -12,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -22,7 +20,7 @@ public class AdminMessageController {
     private final MailSenderService mailSenderService;
     private final MessageService messageService;
 
-    @PostMapping("/admin/send/bulk")
+    @PostMapping("/api/admin/send/bulk")
     public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request)
     {
         Page<String> emails = messageService.findAllEmails(Pageable.unpaged());
