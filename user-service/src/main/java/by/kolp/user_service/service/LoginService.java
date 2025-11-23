@@ -1,13 +1,14 @@
-package by.kolp.myappcore.service;
+package by.kolp.user_service.service;
 
-import by.kolp.myappcore.exceptions.BadRequestException;
-import by.kolp.myappcore.jwt.JWTUtil;
-import by.kolp.myappcore.model.dto.AuthResponseDTO;
-import by.kolp.myappcore.model.dto.LoginRequestDTO;
-import by.kolp.myappcore.model.dto.RefreshTokenDTO;
-import by.kolp.myappcore.model.entity.RefreshToken;
-import by.kolp.myappcore.model.entity.User;
-import by.kolp.myappcore.repository.interfaces.UserRepository;
+
+import by.kolp.apigateway.util.JWTUtil;
+import by.kolp.commonexceptions.exceptions.BadRequestException;
+import by.kolp.user_service.model.dto.AuthResponseDTO;
+import by.kolp.user_service.model.dto.LoginRequestDTO;
+import by.kolp.user_service.model.dto.RefreshTokenDTO;
+import by.kolp.user_service.model.entity.RefreshToken;
+import by.kolp.user_service.model.entity.User;
+import by.kolp.user_service.repository.interfaces.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package by.kolp.myappcore.model.dto;
+package by.kolp.user_service.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
