@@ -1,6 +1,6 @@
-package by.kolp.myappproducer.model.repository;
+package by.kolp.notificationservice.model.repository;
 
-import by.kolp.myappproducer.model.entity.Message;
+import by.kolp.notificationservice.model.entity.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,14 +1,13 @@
-package by.kolp.myappproducer.service;
+package by.kolp.notificationservice.service;
 
 
-import by.kolp.myappproducer.dto.AdminEmailRequest;
-import by.kolp.myappproducer.model.repository.MessageRepository;
+import by.kolp.notificationservice.dto.AdminEmailRequest;
+import by.kolp.notificationservice.model.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -51,35 +50,35 @@ public class MailSenderService {
         Page<String> emailsList = messageRepository.findAllEmails(Pageable.unpaged());
 
         for (String email : emailsList.getContent()) {
-            if(email == null || email.isBlank()) {
+            if (email == null || email.isBlank()) {
                 log.warn("No recipients provided");
                 continue;
             }
 
-        try{
-            SimpleMailMessage message = createMessage(email, subject, text);
-            mailSender.send(message);
-            successfulEmails++;
-            log.info("Successfully sent to: {}", email);
-        }catch (MailException e){
-            log.error("Failed sent to: {}", email, e);
-            failedEmails++;}}
+            try {
+                SimpleMailMessage message = createMessage(email, subject, text);
+                mailSender.send(message);
+                successfulEmails++;
+                log.info("Successfully sent to: {}", email);
+            } catch (MailException e) {
+                log.error("Failed sent to: {}", email, e);
+                failedEmails++;
+            }
+        }
 
         return "Failed attemps: " + failedEmails + ", successful emails: " + successfulEmails;
     }
 
     private SimpleMailMessage createMessage(String toEmail, String subject, String text) {
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(from);
-            message.setTo(toEmail);
-            message.setSubject(subject);
-            message.setText(text);
-            return message;
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(toEmail);
+        message.setSubject(subject);
+        message.setText(text);
+        return message;
 
     }
-
-
 
 
 }

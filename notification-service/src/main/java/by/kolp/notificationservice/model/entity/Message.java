@@ -1,4 +1,4 @@
-package by.kolp.myappproducer.model.entity;
+package by.kolp.notificationservice.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

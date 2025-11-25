@@ -1,7 +1,8 @@
-package by.kolp.myappproducer.service;
+package by.kolp.notificationservice.service;
 
-import by.kolp.myappproducer.dto.EmailSendingResult;
-import by.kolp.myappproducer.model.repository.MessageRepository;
+
+import by.kolp.notificationservice.dto.EmailSendingResult;
+import by.kolp.notificationservice.model.repository.MessageRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

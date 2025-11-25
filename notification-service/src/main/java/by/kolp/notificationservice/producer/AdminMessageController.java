@@ -1,13 +1,16 @@
-package by.kolp.myappproducer.producer;
+package by.kolp.notificationservice.producer;
 
-import by.kolp.myappproducer.dto.AdminEmailRequest;
-import by.kolp.myappproducer.service.MailSenderService;
-import by.kolp.myappproducer.service.MessageService;
+import by.kolp.notificationservice.dto.AdminEmailRequest;
+import by.kolp.notificationservice.dto.SubjectMessageDTO;
+import by.kolp.notificationservice.service.MailSenderService;
+import by.kolp.notificationservice.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,13 @@ public class AdminMessageController {
 
     private final MailSenderService mailSenderService;
     private final MessageService messageService;
+
+    @RabbitListener(queues = "emailQueue")
+    public ResponseEntity<Void> sendBulkHtmlAsync(@Payload SubjectMessageDTO email){
+        messageService.sendHtmlMessage(email.subject(), email.message());
+        log.info("Email sent to :{}", email.subject());
+        return ResponseEntity.accepted().build();
+    }
 
     @PostMapping("/api/admin/send/bulk")
     public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request)

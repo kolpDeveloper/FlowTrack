@@ -1,4 +1,4 @@
-package by.kolp.myappproducer.dto;
+package by.kolp.notificationservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
