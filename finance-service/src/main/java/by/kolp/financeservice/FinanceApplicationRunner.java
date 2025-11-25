@@ -1,11 +1,11 @@
-package by.kolp.apigateway;
+package by.kolp.financeservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiGatewayApplicationRunner {
+public class FinanceApplicationRunner {
     public static void main(String[] args) {
-        SpringApplication.run(ApiGatewayApplicationRunner.class, args);
+        SpringApplication.run(FinanceApplicationRunner.class, args);
     }
 }

@@ -1,7 +1,6 @@
-package by.kolp.myappcore.repository.interfaces;
+package by.kolp.financeservice.repository;
 
-import by.kolp.myappcore.model.entity.NumericDataEntry;
-import lombok.NonNull;
+import by.kolp.financeservice.entity.NumericDataEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
