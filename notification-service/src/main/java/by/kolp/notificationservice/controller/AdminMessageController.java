@@ -1,7 +1,7 @@
-package by.kolp.notificationservice.producer;
+package by.kolp.notificationservice.controller;
 
-import by.kolp.notificationservice.dto.AdminEmailRequest;
-import by.kolp.notificationservice.dto.SubjectMessageDTO;
+import by.kolp.notificationservice.model.dto.AdminEmailRequest;
+import by.kolp.notificationservice.model.dto.SubjectMessageDTO;
 import by.kolp.notificationservice.service.MailSenderService;
 import by.kolp.notificationservice.service.MessageService;
 import lombok.RequiredArgsConstructor;

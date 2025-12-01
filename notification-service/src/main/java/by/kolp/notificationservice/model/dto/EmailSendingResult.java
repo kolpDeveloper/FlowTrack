@@ -1,4 +1,4 @@
-package by.kolp.notificationservice.dto;
+package by.kolp.notificationservice.model.dto;
 
 import lombok.Builder;
 

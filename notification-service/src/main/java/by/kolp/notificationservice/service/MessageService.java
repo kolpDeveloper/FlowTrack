@@ -1,7 +1,7 @@
 package by.kolp.notificationservice.service;
 
 
-import by.kolp.notificationservice.dto.EmailSendingResult;
+import by.kolp.notificationservice.model.dto.EmailSendingResult;
 import by.kolp.notificationservice.model.repository.MessageRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

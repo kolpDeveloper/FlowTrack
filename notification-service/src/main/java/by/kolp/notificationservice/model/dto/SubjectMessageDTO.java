@@ -1,4 +1,4 @@
-package by.kolp.notificationservice.dto;
+package by.kolp.notificationservice.model.dto;
 
 public record SubjectMessageDTO( String subject, String message) {
 }

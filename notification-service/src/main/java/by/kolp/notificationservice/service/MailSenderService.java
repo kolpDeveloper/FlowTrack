@@ -1,7 +1,7 @@
 package by.kolp.notificationservice.service;
 
 
-import by.kolp.notificationservice.dto.AdminEmailRequest;
+import by.kolp.notificationservice.model.dto.AdminEmailRequest;
 import by.kolp.notificationservice.model.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
