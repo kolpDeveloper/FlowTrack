@@ -1,33 +1,107 @@
-version: '3.8'
-
 services:
-  app:
+  # ========== Eureka Server ==========
+  eureka-server:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: flowtrack-app
+      dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
     ports:
-      - "8080:8080"
+      - "8761:8761"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+    - "8087:8087"
     depends_on:
-      postgres:
+      eureka-server:
         condition: service_healthy
-      rabbitmq:
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
+    networks:
+    - app-network
+    restart: unless-stopped
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
       redis:
         condition: service_started
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=
-      - SPRING_RABBITMQ_HOST=rabbitmq
-      - SPRING_RABBITMQ_PORT=5672
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
-      - JWT_SECRET=MATSUMOTO
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
-    restart: on-failure:5
+        - SPRING_PROFILES_ACTIVE=docker
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=
+        - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+        - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
+        - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+        - SPRING_REDIS_HOST=redis
+        - SPRING_REDIS_PORT=6379
+    networks:
+        - app-network
+    restart: unless-stopped
+
+  finance-service:
+      build:
+        context: .
+        dockerfile: finance-service/Dockerfile
+      container_name: finance-service
+      ports:
+        - "8083:8083"
+      depends_on:
+        eureka-server:
+          condition: service_healthy
+        postgres:
+          condition: service_healthy
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=
+        - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+        - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      networks:
+        - app-network
+      restart: unless-stopped
+
+  analytics-service:
+    build:
+      context: .
+      dockerfile: analytics-service/Dockerfile
+    container_name: analytics-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
       - app-network
+    restart: unless-stopped
 
   postgres:
       image: postgres:15-alpine

@@ -1,0 +1,20 @@
+FROM maven:3.9-eclipse-temurin-22 AS build
+WORKDIR /FlowTrack
+COPY pom.xml .
+
+RUN sed -i '/<modules>/,/<\/modules>/d' pom.xml
+RUN mvn install -f pom.xml
+
+COPY api-gateway ./api-gateway
+RUN mvn clean install -DskipTests -f api-gateway/pom.xml
+COPY common-exceptions ./common-exceptions
+RUN mvn clean install -DskipTests -f common-exceptions/pom.xml
+
+COPY user-service ./user-service
+RUN mvn clean package -DskipTests -f user-service/pom.xml
+
+FROM eclipse-temurin:22-jre
+WORKDIR /app
+COPY --from=build /FlowTrack/user-service/target/*.jar app.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar", "app.jar"]

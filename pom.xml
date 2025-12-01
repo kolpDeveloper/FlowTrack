@@ -16,11 +16,13 @@
         <module>analytics-service</module>
         <module>notification-service</module>
         <module>eureka-server</module>
+        <module>common-exceptions</module>
     </modules>
 
     <properties>
-        <java.version>23</java.version>
+        <java.version>22</java.version>
         <spring-boot.version>3.5.5</spring-boot.version>
+        <spring-boot-maven-plugin>3.5.5</spring-boot-maven-plugin>
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.38</lombok.version>
         <flyway.version>11.14.1</flyway.version>
