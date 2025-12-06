@@ -10,11 +10,11 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+      test: ["CMD-SHELL", "curl -f http://eureka-server:8761/actuator/health || exit 1"]
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   api-gateway:
@@ -28,7 +28,6 @@ services:
       eureka-server:
         condition: service_healthy
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
     networks:
@@ -50,10 +49,9 @@ services:
       redis:
         condition: service_started
     environment:
-        - SPRING_PROFILES_ACTIVE=docker
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
         - SPRING_DATASOURCE_USERNAME=postgres
-        - SPRING_DATASOURCE_PASSWORD=
+        - SPRING_DATASOURCE_PASSWORD=postgres
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
         - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
         - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
@@ -76,31 +74,36 @@ services:
         postgres:
           condition: service_healthy
       environment:
-        - SPRING_PROFILES_ACTIVE=docker
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
         - SPRING_DATASOURCE_USERNAME=postgres
-        - SPRING_DATASOURCE_PASSWORD=
+        - SPRING_DATASOURCE_PASSWORD=postgres
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
         - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       networks:
         - app-network
       restart: unless-stopped
 
-  analytics-service:
+  config-server:
     build:
       context: .
-      dockerfile: analytics-service/Dockerfile
-    container_name: analytics-service
+      dockerfile: config-server/Dockerfile
+    container_name: config-server
     ports:
-      - "8084:8084"
+      - "8888:8888"
+    environment:
+      - CONFIG_GIT_BRANCH=git
+      - CONFIG_GIT_URL= #todo
     depends_on:
       eureka-server:
         condition: service_healthy
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f  http://localhost:8888/actuator/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     restart: unless-stopped
 
   postgres:
@@ -108,6 +111,7 @@ services:
       environment:
         POSTGRES_DB: flow-track
         POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
         POSTGRES_HOST_AUTH_METHOD: trust
       ports:
         - "5433:5432"
