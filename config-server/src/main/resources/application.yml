@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          basedir: #todo
+          basedir: https://github.com/kolpDeveloper/FlowTrack.git
 
 logging:
   level:
