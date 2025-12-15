@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://postgres:5432/flow-track
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    from: ${MAIL_FROM:noreply@flowtrack.com}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+server:
+  port: 8888
+
+rabbitmq:
+  queue:
+    name: messageQueue
+  json:
+    queue:
+      name: jsonMessageQueue
+
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      default-zone: http://eureka-server:8761/eureka/

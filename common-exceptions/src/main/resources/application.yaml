@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: common-exceptions
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761
+
+server:
+  port: 8086
