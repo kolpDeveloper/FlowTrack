@@ -48,20 +48,20 @@ public class UserService {
         User user = findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
 
-        if(user.isAdmin()) {
+        if (user.isAdmin()) {
             throw new BadRequestException(format("Cannot delete admin user", user));
         }
         userRepository.deleteById(user.getId());
     }
 
     public Page<UserRegistrationDTO> fetchUser(String prefixName, Pageable pageable) {
-            Page<User> users = Optional.ofNullable(prefixName)
-                    .filter(prefix -> !prefix.isBlank())
-                    .map(prefix -> streamAllByPrefix(prefix, pageable))
-                    .orElse(streamAll(pageable));
+        Page<User> users = Optional.ofNullable(prefixName)
+                .filter(prefix -> !prefix.isBlank())
+                .map(prefix -> streamAllByPrefix(prefix, pageable))
+                .orElse(streamAll(pageable));
 
-            log.info(users.toString());
-            return users.map(userMapper::toRegistrationDTO);
+        log.info(users.toString());
+        return users.map(userMapper::toRegistrationDTO);
     }
 
     @Transactional
@@ -80,5 +80,9 @@ public class UserService {
         newUser.setUsername(user.username());
         User savedUser = userRepository.save(newUser);
         return userMapper.toRegistrationDTO(savedUser);
+    }
+
+    public Page<String> findAllEmails(Pageable pageable) {
+        return userRepository.findAllEmails(pageable);
     }
 }

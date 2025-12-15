@@ -17,14 +17,14 @@ public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "refresh_tokens_seq_gen" )
+            generator = "refresh_tokens_seq_gen")
     @SequenceGenerator(name = "refresh_tokens_seq_gen",
             sequenceName = "refresh_tokens_seq",
             allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false,unique = true, length = 500)
+    @Column(nullable = false, unique = true, length = 500)
     private String token;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +41,7 @@ public class RefreshToken {
     @Column(nullable = false)
     private boolean revoked = false;
 
-    public boolean isExpired(){
+    public boolean isExpired() {
         return Instant.now().isAfter(expiresAt);
     }
 

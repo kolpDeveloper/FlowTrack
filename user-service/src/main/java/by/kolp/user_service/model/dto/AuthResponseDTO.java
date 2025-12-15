@@ -19,8 +19,8 @@ public record AuthResponseDTO(
         String refreshToken
 
 ) {
-        public AuthResponseDTO(String accessToken, Long expiresIn, String username, String role, String refreshToken) {
-                this(accessToken, expiresIn, "Bearer", username, role, refreshToken);
-        }
+    public AuthResponseDTO(String accessToken, Long expiresIn, String username, String role, String refreshToken) {
+        this(accessToken, expiresIn, "Bearer", username, role, refreshToken);
+    }
 }
 

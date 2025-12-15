@@ -3,7 +3,10 @@ package by.kolp.user_service.model.entity;
 
 import by.kolp.user_service.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,21 +48,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role = Role.USER;
-
-    public boolean isAdmin(){
-        return this.role == Role.ADMIN;
-    }
-
     @CreationTimestamp
     @Column(nullable = false, name = "created_at", updatable = false)
     private Instant createdAt;
-
-
     @UpdateTimestamp
     @Column(nullable = false, name = "updated_at")
     private Instant updatedAt;
-
     @UpdateTimestamp
     @Column(nullable = false)
     private Instant lastLoginAt;
+
+    public boolean isAdmin() {
+        return this.role == Role.ADMIN;
+    }
 }

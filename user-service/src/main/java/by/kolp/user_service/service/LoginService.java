@@ -1,7 +1,6 @@
 package by.kolp.user_service.service;
 
 
-import by.kolp.apigateway.util.JWTUtil;
 import by.kolp.commonexceptions.exceptions.BadRequestException;
 import by.kolp.user_service.model.dto.AuthResponseDTO;
 import by.kolp.user_service.model.dto.LoginRequestDTO;
@@ -9,6 +8,7 @@ import by.kolp.user_service.model.dto.RefreshTokenDTO;
 import by.kolp.user_service.model.entity.RefreshToken;
 import by.kolp.user_service.model.entity.User;
 import by.kolp.user_service.repository.interfaces.UserRepository;
+import by.kolp.user_service.util.JWTUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +35,15 @@ public class LoginService {
         User user = userRepository.findByUsername(loginRequest.username())
                 .orElseThrow(() -> new BadRequestException("Invalid username or password!"));
 
-        if(!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new BadRequestException("Invalid password!");
         }
-    user.setLastLoginAt(Instant.now());
-    userRepository.save(user);
+        user.setLastLoginAt(Instant.now());
+        userRepository.save(user);
 
-    String accessToken = jwtUtil.generateToken(loginRequest.username());
-    RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
-    Long expiresIn = jwtUtil.getTokenExpiration().getSeconds();
+        String accessToken = jwtUtil.generateToken(loginRequest.username());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        Long expiresIn = jwtUtil.getTokenExpiration().getSeconds();
 
         return new AuthResponseDTO(
                 accessToken,

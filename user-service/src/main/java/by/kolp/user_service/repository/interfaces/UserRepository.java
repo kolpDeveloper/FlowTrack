@@ -23,4 +23,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Override
     <S extends User> S save(S entity);
+
+    @Query(
+            value = "select u.email from User u",
+            countQuery = "select count(u) from User u"
+    )
+    Page<String> findAllEmails(Pageable pageable);
+
 }

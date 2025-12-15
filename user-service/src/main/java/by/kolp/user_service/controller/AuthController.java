@@ -1,7 +1,6 @@
 package by.kolp.user_service.controller;
 
 
-import by.kolp.apigateway.util.JWTUtil;
 import by.kolp.user_service.model.dto.AuthResponseDTO;
 import by.kolp.user_service.model.dto.LoginRequestDTO;
 import by.kolp.user_service.model.dto.RefreshTokenDTO;
@@ -9,6 +8,7 @@ import by.kolp.user_service.model.dto.UserCreatingRequestDTO;
 import by.kolp.user_service.service.LoginService;
 import by.kolp.user_service.service.RefreshTokenService;
 import by.kolp.user_service.service.RegistrationService;
+import by.kolp.user_service.util.JWTUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping()
+@RequestMapping
 public class AuthController {
 
     private final JWTUtil jwtUtil;

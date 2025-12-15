@@ -24,15 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-    UserService userService;
-    RegistrationService registrationService;
-
-
     public static final String CREATE_USER = "/api/user";
     public static final String EDIT_USER = "/api/user/{user_id}";
     public static final String FETCH_USERS = "/api/user";
     public static final String DELETE_USER = "/api/user/{user_id}";
-
+    UserService userService;
+    RegistrationService registrationService;
 
     @DeleteMapping(value = DELETE_USER)
     @ResponseStatus(HttpStatus.ACCEPTED)
