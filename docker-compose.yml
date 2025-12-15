@@ -17,21 +17,46 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  api-gateway:
+  notification-service:
     build:
       context: .
-      dockerfile: api-gateway/Dockerfile
-    container_name: api-gateway
+      dockerfile: notification-service/Dockerfile
+      args:
+        SERVICE_NAME: notification-service
+        SERVICE_PORT: 8888
+    container_name: notification-service
     ports:
-    - "8087:8087"
+      - "8888:8888"
     depends_on:
       eureka-server:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/flow-track
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
+      - SPRING_MAIL_HOST=${MAIL_HOST}
+      - SPRING_MAIL_PORT=${MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SPRING_MAIL_FROM=${MAIL_FROM:-noreply@flowtrack.com}
     networks:
-    - app-network
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     restart: unless-stopped
 
   user-service:
@@ -82,29 +107,6 @@ services:
       networks:
         - app-network
       restart: unless-stopped
-
-  config-server:
-    build:
-      context: .
-      dockerfile: config-server/Dockerfile
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    environment:
-      - CONFIG_GIT_BRANCH=git
-      - CONFIG_GIT_URL= https://github.com/kolpDeveloper/FlowTrack.git
-    depends_on:
-      eureka-server:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f  http://localhost:8888/actuator/health || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-    restart: unless-stopped
 
   postgres:
       image: postgres:15-alpine

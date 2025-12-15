@@ -5,8 +5,6 @@ COPY pom.xml .
 RUN sed -i '/<modules>/,/<\/modules>/d' pom.xml
 RUN mvn install -f pom.xml
 
-COPY api-gateway ./api-gateway
-RUN mvn clean install -DskipTests -f api-gateway/pom.xml
 COPY common-exceptions ./common-exceptions
 RUN mvn clean install -DskipTests -f common-exceptions/pom.xml
 
@@ -15,6 +13,6 @@ RUN mvn clean package -DskipTests -f user-service/pom.xml
 
 FROM eclipse-temurin:22-jre
 WORKDIR /app
-COPY --from=build /FlowTrack/user-service/target/*.jar app.jar
+COPY --from=build /FlowTrack/user-service/target/user-service-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8081
 ENTRYPOINT ["java","-jar", "app.jar"]

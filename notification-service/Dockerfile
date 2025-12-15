@@ -5,11 +5,10 @@ COPY pom.xml .
 RUN sed -i '/<modules>/,/<\/modules>/d' pom.xml
 
 COPY notification-service ./notification-service
-
-RUN mvn clean package -DskipTests -pl notification-service
+RUN mvn clean package -DskipTests -f notification-service
 
 FROM eclipse-temurin:22-jre
 WORKDIR /app
-COPY --from=build /FlowTrack/notification-service/target/*.jar app.jar
+COPY --from=build /FlowTrack/notification-service/target/notification-service-1.0-SNAPSHOT.jar app.jar
 EXPOSE 8082
 ENTRYPOINT ["java","-jar", "app.jar"]
