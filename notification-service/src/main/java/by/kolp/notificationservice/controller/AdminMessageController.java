@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,6 +26,7 @@ public class AdminMessageController {
     private final MessageService messageService;
     private final UserClientService userClientService;
 
+    @Transactional
     @RabbitListener(queues = "emailQueue")
     public ResponseEntity<Void> sendBulkHtmlAsync(@Payload SubjectMessageDTO email) {
         messageService.sendHtmlMessage(email.subject(), email.message());
@@ -32,6 +34,7 @@ public class AdminMessageController {
         return ResponseEntity.accepted().build();
     }
 
+    @Transactional
     @PostMapping("/api/admin/send/bulk")
     public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request) {
         Page<String> emails = userClientService.findAllEmails(Pageable.unpaged());

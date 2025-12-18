@@ -24,7 +24,7 @@ import java.util.List;
 public class UserClientService {
 
     private final RestTemplate restTemplate;
-    private String user_url = "http://user-service:8081";
+    private final static String user_url = "http://user-service:8081";
 
     public Page<String> findAllEmails(Pageable pageable) {
 
@@ -42,7 +42,7 @@ public class UserClientService {
                 new ParameterizedTypeReference<RestPageResponse<UserEmailDTO>>() {
                 });
 
-        if (response.getBody() == null) {
+        if (response.getBody() == null || response.getBody().getContent() == null || response.getBody().getContent().isEmpty()) {
             log.info("Emails list from user-service is empty");
             return Page.empty(pageable);
         }
