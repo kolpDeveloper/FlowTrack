@@ -2,7 +2,6 @@ package by.kolp.notificationservice.service;
 
 
 import by.kolp.notificationservice.model.dto.EmailSendingResult;
-import by.kolp.notificationservice.model.repository.MessageRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +25,13 @@ import java.util.List;
 @Slf4j
 public class MessageService {
 
+    private final UserClientService userClientService;
+    private final JavaMailSender mailSender;
+    private final RestTemplate restTemplate;
     @Value("${spring.mail.from}")
     private String from;
 
-    private final MessageRepository messageRepository;
-    private final JavaMailSender mailSender;
-
-    public Page<String> findAllEmails(Pageable pageable) {
-        return messageRepository.findAllEmails(PageRequest
-                .of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("email")
-                        .ascending()));
-    }
-
-
-
-    public EmailSendingResult sendHtmlMessage(String subject, String htmlContent){
+    public EmailSendingResult sendHtmlMessage(String subject, String htmlContent) {
         int page = 0;
         int size = 30;
         Page<String> emails;
@@ -50,18 +42,19 @@ public class MessageService {
 
         do {
             Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
-            emails = messageRepository.findAllEmails(pageable);
+            emails = userClientService.findAllEmails(pageable);
 
             if (emails.isEmpty()) {
+                log.info("Emails not found");
                 break;
             }
 
 
-            if(subject.isBlank() || subject.trim().isEmpty()) {
+            if (subject.isBlank() || subject.trim().isEmpty()) {
                 throw new IllegalArgumentException("Subject cannot be empty");
             }
 
-            if(htmlContent.isBlank() || htmlContent.trim().isEmpty()){
+            if (htmlContent.isBlank() || htmlContent.trim().isEmpty()) {
                 throw new IllegalArgumentException("HtmlContent cannot be empty");
             }
 

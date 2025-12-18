@@ -2,7 +2,6 @@ package by.kolp.notificationservice.service;
 
 
 import by.kolp.notificationservice.model.dto.AdminEmailRequest;
-import by.kolp.notificationservice.model.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,15 +19,15 @@ public class MailSenderService {
 
     private final RabbitTemplate rabbitTemplate;
     private final JavaMailSender mailSender;
-    private final MessageRepository messageRepository;
+    private final UserClientService userClientService;
 
     @Value("${spring.mail.username}")
     private String from;
 
-    public MailSenderService(JavaMailSender mailSender, RabbitTemplate rabbitTemplate, MessageRepository messageRepository) {
+    public MailSenderService(JavaMailSender mailSender, RabbitTemplate rabbitTemplate, UserClientService userClientService) {
         this.mailSender = mailSender;
         this.rabbitTemplate = rabbitTemplate;
-        this.messageRepository = messageRepository;
+        this.userClientService = userClientService;
     }
 
     public void sendToQueue(AdminEmailRequest email) {
@@ -47,7 +46,7 @@ public class MailSenderService {
 
         int failedEmails = 0;
         int successfulEmails = 0;
-        Page<String> emailsList = messageRepository.findAllEmails(Pageable.unpaged());
+        Page<String> emailsList = userClientService.findAllEmails(Pageable.unpaged());
 
         for (String email : emailsList.getContent()) {
             if (email == null || email.isBlank()) {

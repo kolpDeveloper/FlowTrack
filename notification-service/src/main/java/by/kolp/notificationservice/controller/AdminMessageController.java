@@ -4,6 +4,7 @@ import by.kolp.notificationservice.model.dto.AdminEmailRequest;
 import by.kolp.notificationservice.model.dto.SubjectMessageDTO;
 import by.kolp.notificationservice.service.MailSenderService;
 import by.kolp.notificationservice.service.MessageService;
+import by.kolp.notificationservice.service.UserClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -22,18 +23,18 @@ public class AdminMessageController {
 
     private final MailSenderService mailSenderService;
     private final MessageService messageService;
+    private final UserClientService userClientService;
 
     @RabbitListener(queues = "emailQueue")
-    public ResponseEntity<Void> sendBulkHtmlAsync(@Payload SubjectMessageDTO email){
+    public ResponseEntity<Void> sendBulkHtmlAsync(@Payload SubjectMessageDTO email) {
         messageService.sendHtmlMessage(email.subject(), email.message());
         log.info("Email sent to :{}", email.subject());
         return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/api/admin/send/bulk")
-    public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request)
-    {
-        Page<String> emails = messageService.findAllEmails(Pageable.unpaged());
+    public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request) {
+        Page<String> emails = userClientService.findAllEmails(Pageable.unpaged());
 
         mailSenderService.send(emails, request.getSubject(), request.getMessage());
         log.info("Messages successfully sent!");

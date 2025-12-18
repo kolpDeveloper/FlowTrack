@@ -15,5 +15,5 @@ public interface NumericDataEntryRepository extends JpaRepository<NumericDataEnt
     Optional<NumericDataEntry> findById(Long id);
 
     @Override
-    <S extends NumericDataEntry> S saveAndFlush( S entity);
+    <S extends NumericDataEntry> S saveAndFlush(S entity);
 }
