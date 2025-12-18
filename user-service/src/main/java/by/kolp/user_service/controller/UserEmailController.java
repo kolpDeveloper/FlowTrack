@@ -4,11 +4,11 @@ import by.kolp.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class UserEmailController {
 
     public static final String GET_INTERNAL_EMAILS = "/api/internal/user/emails";
