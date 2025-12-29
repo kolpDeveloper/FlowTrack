@@ -1,6 +1,7 @@
 package by.kolp.notificationservice.service;
 
 import by.kolp.notificationservice.model.dto.UserEmailDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,10 +27,10 @@ public class UserClientService {
     private final RestTemplate restTemplate;
     private final static String user_url = "http://user-service:8081";
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "getRate")
     public Page<String> findAllEmails(Pageable pageable) {
 
         String url = UriComponentsBuilder.fromHttpUrl(user_url + "/api/internal/user/emails")
-                .path("/api/internal/user/emails")
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .build()

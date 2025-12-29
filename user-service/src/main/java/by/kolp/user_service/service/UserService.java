@@ -8,6 +8,7 @@ import by.kolp.user_service.model.dto.UserRegistrationDTO;
 import by.kolp.user_service.model.dto.UsernameDto;
 import by.kolp.user_service.model.entity.User;
 import by.kolp.user_service.repository.interfaces.UserRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import static java.lang.String.format;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
 public class UserService {
 
     private final UserRepository userRepository;
