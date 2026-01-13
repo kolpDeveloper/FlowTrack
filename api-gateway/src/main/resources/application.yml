@@ -4,3 +4,27 @@ server:
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: finance-route
+          uri: lb://FINANCE-SERVICE
+          predicates:
+            - Path=/finance/**
+        - id: user-route
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+        - id: notification-route
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notification/**
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
