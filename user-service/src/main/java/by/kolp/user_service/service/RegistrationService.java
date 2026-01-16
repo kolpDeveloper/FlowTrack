@@ -6,6 +6,7 @@ import by.kolp.user_service.model.dto.UserCreatingRequestDTO;
 import by.kolp.user_service.model.dto.UserRegistrationDTO;
 import by.kolp.user_service.model.entity.User;
 import by.kolp.user_service.repository.interfaces.UserRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ public class RegistrationService {
 
 
     @Transactional
+    @CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
     public UserRegistrationDTO register(UserCreatingRequestDTO request) {
         User newUser = userMapper.toUser(request);
         newUser.setPassword(passwordEncoder.encode(request.password()));

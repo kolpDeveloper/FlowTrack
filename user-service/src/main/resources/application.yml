@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      password: admin
+      name: admin
   application:
     name: user-service
   datasource:
@@ -30,3 +34,13 @@ server:
 jwt:
   secret: ${JWT_SECRET:MATSUMOTO}
   expiration: 7d
+
+resilience4j.circuitbreaker:
+  instances:
+    UserBackend:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+      failure-rate-threshold: 50
+      wait-duration-in-open-state: 10s
+      permitted-number-of-calls-in-half-open-state: 5
+

@@ -2,6 +2,7 @@ package by.kolp.notificationservice.service;
 
 
 import by.kolp.notificationservice.model.dto.EmailSendingResult;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class MessageService {
     @Value("${spring.mail.from}")
     private String from;
 
+    @CircuitBreaker(name = "backendA", fallbackMethod = "getRate")
     public EmailSendingResult sendHtmlMessage(String subject, String htmlContent) {
         int page = 0;
         int size = 30;

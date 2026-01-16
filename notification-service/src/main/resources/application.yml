@@ -43,5 +43,17 @@ rabbitmq:
 eureka:
   client:
     register-with-eureka: true
+    fetch-registry: true
     service-url:
-      default-zone: http://eureka-server:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
+
+resilience4j.circuitbreaker:
+    instances:
+      backendA:
+        registerHealthIndicator: true
+        slidingWindowSize: 50
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 5
+
+

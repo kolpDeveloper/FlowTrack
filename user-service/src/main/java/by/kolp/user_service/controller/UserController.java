@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -33,7 +35,7 @@ public class UserController {
 
     @DeleteMapping(value = DELETE_USER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUser(@PathVariable("user_id") Integer userId) {
+    public void deleteUser(@PathVariable("user_id") UUID userId) {
         userService.deleteById(userId);
         log.info("Deleted user with id {}", userId);
     }
@@ -54,7 +56,7 @@ public class UserController {
     }
 
     @PatchMapping(EDIT_USER)
-    public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") Integer userId, @RequestBody @Valid UsernameDto request) {
+    public ResponseEntity<UserRegistrationDTO> editUsername(@PathVariable("user_id") UUID userId, @RequestBody @Valid UsernameDto request) {
         UserRegistrationDTO savedUser = userService.edit(userId, request);
         log.info("User:{} successfully edited!", savedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(savedUser);

@@ -21,4 +21,13 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:8761
+      defaultZone: http://eureka-server:8761/eureka/
+
+resilience4j.circuitbreaker:
+  instances:
+    financeBackend:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+      failure-rate-threshold: 50
+      wait-duration-in-open-state: 10s
+      permitted-number-of-calls-in-half-open-state: 5

@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,13 +17,13 @@ import java.time.Instant;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    @GeneratedValue(strategy = GenerationType.UUID,
             generator = "refresh_tokens_seq_gen")
     @SequenceGenerator(name = "refresh_tokens_seq_gen",
             sequenceName = "refresh_tokens_seq",
             allocationSize = 1)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, unique = true, length = 500)
     private String token;

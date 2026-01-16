@@ -9,6 +9,7 @@ import by.kolp.user_service.model.entity.RefreshToken;
 import by.kolp.user_service.model.entity.User;
 import by.kolp.user_service.repository.interfaces.UserRepository;
 import by.kolp.user_service.util.JWTUtil;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 
 @Service
+@CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
 public class LoginService {
 
     private final PasswordEncoder passwordEncoder;
