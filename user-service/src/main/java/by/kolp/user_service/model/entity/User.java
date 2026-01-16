@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.UUID;
 
 
 @Getter
@@ -25,7 +26,7 @@ import java.time.Instant;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    @GeneratedValue(strategy = GenerationType.UUID,
             generator = "users_seq_gen")
     @SequenceGenerator(
             name = "users_seq_gen",
@@ -33,7 +34,7 @@ public class User {
             allocationSize = 1
     )
     @Column(name = "id")
-    private Integer id;
+    private UUID id;
 
     @Column(nullable = false, unique = true, length = 40)
     private String username;

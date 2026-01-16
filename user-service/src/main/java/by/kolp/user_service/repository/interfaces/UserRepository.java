@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
@@ -15,8 +16,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Page<User> streamAllByUsernameStartingWithIgnoreCase(String username, Pageable pageable);
 
-    @Override
-    void deleteById(Integer integer);
+    void deleteById(UUID id);
+
+    Optional<User> findById(UUID integer);
 
     @Query("SELECT u FROM User u")
     Page<User> streamAll(Pageable pageable);

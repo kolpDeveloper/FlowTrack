@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -30,7 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public Optional<User> findById(Integer id) {
+    public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
 
@@ -46,7 +47,7 @@ public class UserService {
         return userRepository.streamAll(pageable);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(UUID id) {
         User user = findById(id)
                 .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
 
@@ -67,7 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserRegistrationDTO edit(Integer id, UsernameDto user) {
+    public UserRegistrationDTO edit(UUID id, UsernameDto user) {
         log.info("User:{} successfully edited!", user);
 
         findByUsername(user.username())

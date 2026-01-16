@@ -3,11 +3,7 @@ package by.kolp.user_service.mapper;
 import by.kolp.user_service.model.dto.UserCreatingRequestDTO;
 import by.kolp.user_service.model.dto.UserRegistrationDTO;
 import by.kolp.user_service.model.entity.User;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
-import org.mapstruct.Builder;
+import org.mapstruct.*;
 
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
