@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public record UserPrincipal(UUID id, String username, List<SimpleGrantedAuthority> email) implements UserDetails {
+public record UserPrincipal(UUID id, String username, List<SimpleGrantedAuthority> authorities) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
