@@ -23,12 +23,14 @@ public class JWTUtils {
     @Getter
     private Duration tokenExpiration;
 
-    public String generateToken(String username) {
+    public String generateToken(String userId, String username, String role) {
 
         Date expiredDate = Date.from(Instant.now().plus(tokenExpiration));
 
         return JWT.create()
-                .withSubject(username)
+                .withSubject(userId)
+                .withClaim("username", username)
+                .withClaim("role", role)
                 .withIssuedAt(Instant.now())
                 .withExpiresAt(expiredDate)
                 .sign(Algorithm.HMAC256(secret));
@@ -59,6 +61,13 @@ public class JWTUtils {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decode = verifier.verify(token);
         return decode.getClaim("role").asString();
+    }
+
+    public String extractUsername(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decode = verifier.verify(token);
+        return decode.getClaim("username").asString();
     }
 }
 

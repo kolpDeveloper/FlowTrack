@@ -40,7 +40,7 @@ public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
                 userUUID = UUID.fromString(userId);
             } catch (IllegalArgumentException e) {
                 log.warn("Illegal UUID passed to X-USER-ID: {}", userId);
-                filterChain.doFilter(request, response);
+                response.setStatus(401);
                 return;
             }
 
@@ -53,5 +53,6 @@ public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
             log.debug("User {} authenticated", username);
 
         }
+        filterChain.doFilter(request, response);
     }
 }

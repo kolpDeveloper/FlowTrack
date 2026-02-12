@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -28,11 +29,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID,
             generator = "users_seq_gen")
-    @SequenceGenerator(
-            name = "users_seq_gen",
-            sequenceName = "users_seq",
-            allocationSize = 1
-    )
+    @UuidGenerator
     @Column(name = "id")
     private UUID id;
 

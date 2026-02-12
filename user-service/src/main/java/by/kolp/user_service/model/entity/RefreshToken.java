@@ -3,6 +3,7 @@ package by.kolp.user_service.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -19,9 +20,7 @@ public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID,
             generator = "refresh_tokens_seq_gen")
-    @SequenceGenerator(name = "refresh_tokens_seq_gen",
-            sequenceName = "refresh_tokens_seq",
-            allocationSize = 1)
+    @UuidGenerator
     @Column(name = "id")
     private UUID id;
 

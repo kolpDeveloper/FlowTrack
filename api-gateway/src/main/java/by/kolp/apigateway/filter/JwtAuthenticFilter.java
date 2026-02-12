@@ -5,12 +5,13 @@ import org.apache.http.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-public class JwtAuthenticFilter extends AbstractGatewayFilterFactory {
+public class JwtAuthenticFilter extends AbstractGatewayFilterFactory<JwtAuthenticFilter.Config> {
 
     private final JWTUtils jwtUtils;
 
@@ -19,7 +20,7 @@ public class JwtAuthenticFilter extends AbstractGatewayFilterFactory {
     }
 
     @Override
-    public GatewayFilter apply(Object config) {
+    public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
@@ -39,13 +40,16 @@ public class JwtAuthenticFilter extends AbstractGatewayFilterFactory {
 
                 String userId = jwtUtils.extractUserId(token);
                 String role = jwtUtils.extractRole(token);
+                String username = jwtUtils.extractUsername(token);
 
-                exchange.getRequest().mutate()
+
+                ServerHttpRequest request = exchange.getRequest().mutate()
                         .header("X-USER-ID", userId)
                         .header("X-USER-AUTHORITIES", role)
+                        .header("X-USER-NAME", username)
                         .build();
 
-                return chain.filter(exchange);
+                return chain.filter(exchange.mutate().request(request).build());
 
             } catch (Exception e) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -58,5 +62,7 @@ public class JwtAuthenticFilter extends AbstractGatewayFilterFactory {
         exchange.getResponse().setStatusCode(status);
         return exchange.getResponse().setComplete();
     }
+
+    public static class Config {}
 }
 
