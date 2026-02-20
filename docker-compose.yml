@@ -17,6 +17,29 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    ports:
+      - "8087:8087"
+    networks:
+      - app-network
+    environment:
+      - JWT_SECRET=${JWT_SECRET:?Error}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://api-gateway:8087/ || exit 1"]
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+
   notification-service:
     build:
       context: .
@@ -44,10 +67,10 @@ services:
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_MAIL_HOST=${MAIL_HOST}
-      - SPRING_MAIL_PORT=${MAIL_PORT}
-      - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
-      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SPRING_MAIL_HOST=${MAIL_HOST?Error not found env}
+      - SPRING_MAIL_PORT=${MAIL_PORT?Error not found env}
+      - SPRING_MAIL_USERNAME=${MAIL_USERNAME?Error not found env}
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD?Error not found env}
       - SPRING_MAIL_FROM=${MAIL_FROM:-noreply@flowtrack.com}
     networks:
       - app-network
@@ -72,7 +95,7 @@ services:
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=postgres
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-        - JWT_SECRET=${JWT_SECRET:-MATSUMOTO}
+        - JWT_SECRET=${JWT_SECRET?Error not found env}
         - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
         - SPRING_REDIS_HOST=redis
         - SPRING_REDIS_PORT=6379

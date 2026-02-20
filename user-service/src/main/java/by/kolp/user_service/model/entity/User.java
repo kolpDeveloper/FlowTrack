@@ -26,13 +26,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID,
-            generator = "users_seq_gen")
-    @SequenceGenerator(
-            name = "users_seq_gen",
-            sequenceName = "users_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 

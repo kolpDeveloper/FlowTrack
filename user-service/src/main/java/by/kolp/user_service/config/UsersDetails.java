@@ -17,6 +17,7 @@ public class UsersDetails implements UserDetails {
         this.user = Objects.requireNonNull(user, "user cannot be null");
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
