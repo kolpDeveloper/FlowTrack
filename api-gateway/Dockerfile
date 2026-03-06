@@ -5,6 +5,10 @@ COPY pom.xml .
 
 #Удаляем секцию modules из родительского pom.xml
 RUN sed -i '/<modules>/,/<\/modules>/d' pom.xml
+RUN mvn install -f pom.xml
+
+COPY common-exceptions ./common-exceptions
+RUN mvn clean install -DskipTests -f common-exceptions/pom.xml
 
 COPY api-gateway ./api-gateway
 

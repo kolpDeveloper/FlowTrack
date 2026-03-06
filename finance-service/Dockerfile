@@ -6,6 +6,9 @@ RUN mvn install -f pom.xml
 COPY common-exceptions ./common-exceptions
 RUN mvn clean install -DskipTests -f common-exceptions/pom.xml
 
+COPY api-gateway ./api-gateway
+RUN mvn clean install -DskipTests -f api-gateway/pom.xml
+
 COPY finance-service ./finance-service
 RUN mvn clean package -DskipTests -f finance-service/pom.xml
 

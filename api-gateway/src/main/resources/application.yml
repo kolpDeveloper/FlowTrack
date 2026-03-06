@@ -14,14 +14,21 @@ spring:
           uri: lb://FINANCE-SERVICE
           predicates:
             - Path=/finance/**
+          filters:
+           - JwtAuthentic
         - id: user-route
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user/**
+          filters:
+            - JwtAuthentic
         - id: notification-route
           uri: lb://NOTIFICATION-SERVICE
           predicates:
             - Path=/notification/**
+          filters:
+            - JwtAuthentic
+     # default-filters: JwtAuthentic
 
 
 eureka:

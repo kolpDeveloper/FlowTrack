@@ -1,10 +1,12 @@
 package by.kolp.financeservice.filter;
 
+import by.kolp.commonexceptions.util.JWTUtils;
 import by.kolp.financeservice.dto.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,39 +21,37 @@ import java.util.UUID;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JWTUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String userId = request.getHeader("X-USER-ID");
-        String username = request.getHeader("X-USER-NAME");
-        String role = request.getHeader("X-USER-AUTHORITIES");
 
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            List<SimpleGrantedAuthority> authorities = (role != null && !role.isBlank()
-                    ? Arrays.stream(role.split(","))
-                    .map(SimpleGrantedAuthority::new)
-                    .toList()
-                    : List.of());
+        String authorizationHeader = request.getHeader("Authorization");
 
+        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
 
-            UUID userUUID;
-            try {
-                userUUID = UUID.fromString(userId);
-            } catch (IllegalArgumentException e) {
-                log.warn("Illegal UUID passed to X-USER-ID: {}", userId);
-                response.setStatus(401);
-                return;
+            if(jwtUtils.isTokenValid(token)) {
+                UUID user_id = UUID.fromString(jwtUtils.extractUserId(token));
+                String username = jwtUtils.extractUsername(token);
+                String role = jwtUtils.extractRole(token);
+
+                List<SimpleGrantedAuthority> authorities = (role != null && !role.isBlank()
+                        ? Arrays.stream(role.split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .toList()
+                        : List.of());
+
+                UserPrincipal principal = new UserPrincipal(user_id, username, authorities);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, null, authorities);
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else {
+                log.warn("Invalid JWT token");
             }
-
-            UserPrincipal principal = new UserPrincipal(userUUID, username, authorities);
-
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
-
-            auth.setDetails(principal);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            log.debug("User {} authenticated", username);
-
         }
         filterChain.doFilter(request, response);
     }
