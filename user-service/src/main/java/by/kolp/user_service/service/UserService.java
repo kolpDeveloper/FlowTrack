@@ -3,7 +3,9 @@ package by.kolp.user_service.service;
 
 import by.kolp.commonexceptions.exceptions.BadRequestException;
 import by.kolp.commonexceptions.exceptions.NotFoundException;
+import by.kolp.user_service.client.FinanceClient;
 import by.kolp.user_service.mapper.UserMapper;
+import by.kolp.user_service.model.dto.NumericDataEntryDTO;
 import by.kolp.user_service.model.dto.UserRegistrationDTO;
 import by.kolp.user_service.model.dto.UsernameDto;
 import by.kolp.user_service.model.entity.User;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,11 +28,17 @@ import static java.lang.String.format;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
+@CircuitBreaker(name = "UserBackend")
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final FinanceClient financeClient;
+
+    public List<NumericDataEntryDTO> getUserFinances(UUID userId) {
+        log.info("Fetching finances for user with id {}", userId);
+        return financeClient.getUserFinances(userId);
+    }
 
     public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
@@ -49,10 +58,10 @@ public class UserService {
 
     public void deleteById(UUID id) {
         User user = findById(id)
-                .orElseThrow(() -> new NotFoundException(format("User not found with id %d", id)));
+                .orElseThrow(() -> new NotFoundException("User not found with id"));
 
         if (user.isAdmin()) {
-            throw new BadRequestException(format("Cannot delete admin user", user));
+            throw new BadRequestException(format("Cannot delete admin user: " + user.getUsername()));
         }
         userRepository.deleteById(user.getId());
     }

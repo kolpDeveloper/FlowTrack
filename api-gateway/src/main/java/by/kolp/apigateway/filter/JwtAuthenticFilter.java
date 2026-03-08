@@ -1,9 +1,10 @@
 package by.kolp.apigateway.filter;
 
-import by.kolp.apigateway.util.JWTUtils;
-import org.apache.http.HttpHeaders;
+import by.kolp.commonexceptions.util.JWTUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -11,11 +12,13 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
+@ComponentScan("by.kolp.commonexceptions.util")
 public class JwtAuthenticFilter extends AbstractGatewayFilterFactory<JwtAuthenticFilter.Config> {
 
     private final JWTUtils jwtUtils;
 
     public JwtAuthenticFilter(JWTUtils jwtUtils) {
+        super(Config.class);
         this.jwtUtils = jwtUtils;
     }
 
@@ -25,7 +28,6 @@ public class JwtAuthenticFilter extends AbstractGatewayFilterFactory<JwtAuthenti
             String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return stopWithStatus(exchange, HttpStatus.UNAUTHORIZED);
             }
 
@@ -44,6 +46,11 @@ public class JwtAuthenticFilter extends AbstractGatewayFilterFactory<JwtAuthenti
 
 
                 ServerHttpRequest request = exchange.getRequest().mutate()
+                        .headers(del -> {
+                            del.remove("X-USER-ID");
+                            del.remove("X-USER-NAME");
+                            del.remove("X-USER-AUTHORITIES");
+                                })
                         .header("X-USER-ID", userId)
                         .header("X-USER-AUTHORITIES", role)
                         .header("X-USER-NAME", username)

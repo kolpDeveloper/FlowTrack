@@ -32,7 +32,7 @@ public class MessageService {
     @Value("${spring.mail.from}")
     private String from;
 
-    @CircuitBreaker(name = "backendA", fallbackMethod = "getRate")
+    @CircuitBreaker(name = "backendA")
     public EmailSendingResult sendHtmlMessage(String subject, String htmlContent) {
         int page = 0;
         int size = 30;

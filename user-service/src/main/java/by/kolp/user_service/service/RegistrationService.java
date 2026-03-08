@@ -24,8 +24,9 @@ public class RegistrationService {
 
 
     @Transactional
-    @CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
+    @CircuitBreaker(name = "UserBackend")
     public UserRegistrationDTO register(UserCreatingRequestDTO request) {
+
         User newUser = userMapper.toUser(request);
         newUser.setPassword(passwordEncoder.encode(request.password()));
         User saved = userRepository.save(newUser);
