@@ -19,7 +19,7 @@ spring:
         - id: user-route
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user/**
+            - Path=/api/user/**
           filters:
             - JwtAuthentic
         - id: notification-route

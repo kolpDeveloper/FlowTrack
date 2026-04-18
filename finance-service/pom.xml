@@ -30,14 +30,21 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>by.kolp</groupId>
             <artifactId>common-exceptions</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
-            <groupId>by.kolp</groupId>
-            <artifactId>api-gateway</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.23.0</version>
+            <scope>test</scope>
         </dependency>
         <!-- Lombok -->
         <dependency>
