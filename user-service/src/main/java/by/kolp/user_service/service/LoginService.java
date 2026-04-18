@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 
 @Service
-@CircuitBreaker(name = "UserBackend", fallbackMethod = "getRate")
+@CircuitBreaker(name = "UserBackend")
 public class LoginService {
 
     private final PasswordEncoder passwordEncoder;

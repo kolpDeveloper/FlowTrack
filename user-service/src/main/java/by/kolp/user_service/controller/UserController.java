@@ -1,6 +1,7 @@
 package by.kolp.user_service.controller;
 
 
+import by.kolp.user_service.model.dto.NumericDataEntryDTO;
 import by.kolp.user_service.model.dto.UserCreatingRequestDTO;
 import by.kolp.user_service.model.dto.UserRegistrationDTO;
 import by.kolp.user_service.model.dto.UsernameDto;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -30,8 +32,15 @@ public class UserController {
     public static final String EDIT_USER = "/api/user/{user_id}";
     public static final String FETCH_USERS = "/api/user";
     public static final String DELETE_USER = "/api/user/{user_id}";
+    public static final String FETCH_USER_FINANCES = "/api/user/{user_id}/finances";
     UserService userService;
     RegistrationService registrationService;
+
+    @GetMapping(FETCH_USER_FINANCES)
+    public ResponseEntity<List<NumericDataEntryDTO>> getUserFinances(@PathVariable("user_id") UUID userId) {
+        log.info("Fetching finances for user id: {}", userId);
+        return ResponseEntity.ok(userService.getUserFinances(userId));
+    }
 
     @DeleteMapping(value = DELETE_USER)
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -43,16 +52,16 @@ public class UserController {
     @GetMapping(FETCH_USERS)
     public ResponseEntity<Page<UserRegistrationDTO>> fetchUsers(@RequestParam(value = "prefix_name", required = false, defaultValue = "") String prefixName, @PageableDefault(size = 20, sort = "username") Pageable pageable) {
         Page<UserRegistrationDTO> result = userService.fetchUser(prefixName, pageable);
-        log.info(result.toString());
+        log.info("Fetched successfully: {} ",result.toString());
         return ResponseEntity.ok(result);
     }
 
 
     @PostMapping(CREATE_USER)
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody @Valid UserCreatingRequestDTO request) {
-        registrationService.register(request);
+    public UserRegistrationDTO register(@RequestBody @Valid UserCreatingRequestDTO request) {
         log.info("Created username: {}", request.username());
+        return registrationService.register(request);
     }
 
     @PatchMapping(EDIT_USER)

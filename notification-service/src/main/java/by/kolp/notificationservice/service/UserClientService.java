@@ -27,7 +27,7 @@ public class UserClientService {
     private final RestTemplate restTemplate;
     private final static String user_url = "http://user-service:8081";
 
-    @CircuitBreaker(name = "backendA", fallbackMethod = "getRate")
+    @CircuitBreaker(name = "backendA")
     public Page<String> findAllEmails(Pageable pageable) {
 
         String url = UriComponentsBuilder.fromHttpUrl(user_url + "/api/internal/user/emails")
