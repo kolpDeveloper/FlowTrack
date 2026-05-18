@@ -1,15 +1,10 @@
 package by.kolp.notificationservice.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.domain.Page;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AdminEmailRequest {
-    private Page<String> to;
-    private String subject;
-    private String message;
+
+public record AdminEmailRequest(@NotEmpty Page<String> to, @NotBlank String subject,@NotBlank String body)
+{
 }

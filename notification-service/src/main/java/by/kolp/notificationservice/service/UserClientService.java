@@ -2,9 +2,7 @@ package by.kolp.notificationservice.service;
 
 import by.kolp.notificationservice.model.dto.UserEmailDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,37 +34,25 @@ public class UserClientService {
                 .toUriString();
         log.info("fetching emails from user-service");
 
-        ResponseEntity<RestPageResponse<UserEmailDTO>> response = restTemplate.exchange(url,
+        ResponseEntity<UserEmailDTO<String>> response = restTemplate.exchange(url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<RestPageResponse<UserEmailDTO>>() {
+                new ParameterizedTypeReference<UserEmailDTO<String>>() {
                 });
 
-        if (response.getBody() == null || response.getBody().getContent() == null || response.getBody().getContent().isEmpty()) {
+        if (response.getBody() == null
+            || response.getBody().getContent() == null
+            || response.getBody().getContent().isEmpty()) {
             log.info("Emails list from user-service is empty");
             return Page.empty(pageable);
         }
 
-        RestPageResponse<UserEmailDTO> body = response.getBody();
-        List<String> emailList = body.content.stream()
-                .map(UserEmailDTO::toString)
-                .toList();
+        UserEmailDTO<String> body = response.getBody();
+        List<String> emailList = response.getBody().getContent();
 
         return new PageImpl<>(emailList,
                 pageable,
-                body.totalElements);
-    }
-
-    @Getter
-    @Setter
-    public static class RestPageResponse<T extends Serializable> {
-
-        private List<T> content;
-
-        private int size;
-
-        private int totalElements;
-
+                body.getTotalElements());
     }
 }
 

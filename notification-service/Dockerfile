@@ -10,5 +10,5 @@ RUN mvn clean package -DskipTests -f notification-service
 FROM eclipse-temurin:22-jre
 WORKDIR /app
 COPY --from=build /FlowTrack/notification-service/target/notification-service-1.0-SNAPSHOT.jar app.jar
-EXPOSE 8082
+EXPOSE 8888
 ENTRYPOINT ["java","-jar", "app.jar"]

@@ -1,15 +1,10 @@
 spring:
-  security:
-    user:
-      password: admin
-      name: admin
   application:
     name: user-service
   datasource:
     url: jdbc:postgresql://postgres:5432/flow-track
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
