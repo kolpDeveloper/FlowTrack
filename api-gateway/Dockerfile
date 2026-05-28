@@ -18,5 +18,5 @@ FROM eclipse-temurin:22-jre
 WORKDIR /app
 RUN apt-get update && apt-get install -y curl || apk add --no-cache curl
 COPY --from=build /FlowTrack/api-gateway/target/*.jar app.jar
-EXPOSE 8890
+EXPOSE 8087
 ENTRYPOINT ["java","-jar", "app.jar"]

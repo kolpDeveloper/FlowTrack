@@ -14,5 +14,5 @@ RUN mvn clean package -DskipTests -f user-service/pom.xml
 FROM eclipse-temurin:22-jre
 WORKDIR /app
 COPY --from=build /FlowTrack/user-service/target/user-service-1.0-SNAPSHOT.jar app.jar
-EXPOSE 8081
+EXPOSE 8082
 ENTRYPOINT ["java","-jar", "app.jar"]

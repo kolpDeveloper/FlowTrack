@@ -10,9 +10,10 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
 @Table(name = "refresh_tokens")
 public class RefreshToken {
 
@@ -21,6 +22,7 @@ public class RefreshToken {
     @Column(name = "id")
     private UUID id;
 
+    @NonNull
     @Column(nullable = false, unique = true, length = 500)
     private String token;
 

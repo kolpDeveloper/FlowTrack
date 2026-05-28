@@ -50,7 +50,7 @@ public class FinanceControllerCircuitBreakerTest {
         when(numericDataEntryRepository.save(any())).thenThrow(new RuntimeException("DB connection error"));
 
         CategoryNameDTO c = new CategoryNameDTO("Qwerty");
-        NumericDataEntryDTO dataEntryDTO = new NumericDataEntryDTO(UUID.randomUUID(), UUID.randomUUID(), "1", BigDecimal.valueOf(123.456789), Instant.now(), c);
+        NumericDataEntryDTO dataEntryDTO = new NumericDataEntryDTO(UUID.randomUUID(), "1", BigDecimal.valueOf(123.456789), Instant.now(), c);
 
         mockMvc.perform(post("/api/value")
                 .contentType(MediaType.APPLICATION_JSON)

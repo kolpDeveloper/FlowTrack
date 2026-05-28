@@ -12,7 +12,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-@ComponentScan("by.kolp.commonexceptions.util")
 public class JwtAuthenticFilter extends AbstractGatewayFilterFactory<JwtAuthenticFilter.Config> {
 
     private final JWTUtils jwtUtils;

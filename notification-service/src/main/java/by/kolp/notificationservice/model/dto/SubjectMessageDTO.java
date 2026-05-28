@@ -1,4 +1,6 @@
 package by.kolp.notificationservice.model.dto;
 
-public record SubjectMessageDTO(String subject, String message) {
+import jakarta.validation.constraints.NotBlank;
+
+public record SubjectMessageDTO(@NotBlank String subject,@NotBlank String message) {
 }

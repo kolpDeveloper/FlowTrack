@@ -15,20 +15,20 @@ spring:
           predicates:
             - Path=/finance/**
           filters:
-           - JwtAuthentic
+          ## - JwtAuthenticationFilter
         - id: user-route
           uri: lb://USER-SERVICE
           predicates:
             - Path=/api/user/**
           filters:
-            - JwtAuthentic
+       ##     - JwtAuthenticationFilter
         - id: notification-route
           uri: lb://NOTIFICATION-SERVICE
           predicates:
             - Path=/notification/**
           filters:
-            - JwtAuthentic
-     # default-filters: JwtAuthentic
+     ##       - JwtAuthenticationFilter
+     # default-filters: JwtAuthenticationFilter
 
 
 eureka:

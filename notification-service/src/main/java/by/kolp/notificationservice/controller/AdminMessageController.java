@@ -36,12 +36,15 @@ public class AdminMessageController {
 
     @Transactional
     @PostMapping("/api/admin/send/bulk")
-    public ResponseEntity<String> sendBulk(@RequestBody AdminEmailRequest request) {
+    public void sendBulk(@RequestBody AdminEmailRequest request) {
+        if(request.to() == null || request.to().isEmpty()){
+            throw new IllegalArgumentException("Email to send cannot be empty");
+        }
+
         Page<String> emails = userClientService.findAllEmails(Pageable.unpaged());
 
-        mailSenderService.send(emails, request.getSubject(), request.getMessage());
+        mailSenderService.send(emails, request.subject(), request.body());
         log.info("Messages successfully sent!");
-        return ResponseEntity.status(200).build();
     }
 
 
