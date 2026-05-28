@@ -1,14 +1,14 @@
 package by.kolp.notificationservice.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
 
 
 public record BulkEmailRequest(
-        @NotEmpty(message = "Recipients list cannot be empty")
-        List<String> recipients,
+
+        @NotNull
+        Page<String> recipients,
 
         @NotBlank(message = "Subject cannot be empty")
         String subject,

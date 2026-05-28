@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,12 +20,14 @@ import java.util.List;
 public class MailSenderService {
 
     private final RabbitTemplate rabbitTemplate;
+    private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String from;
 
-    public MailSenderService(RabbitTemplate rabbitTemplate) {
+    public MailSenderService(RabbitTemplate rabbitTemplate, JavaMailSender mailSender) {
         this.rabbitTemplate = rabbitTemplate;
+        this.mailSender = mailSender;
     }
 
     public void sendToQueue(AdminEmailRequest email) {
@@ -40,6 +43,8 @@ public class MailSenderService {
         for (String email : recipients) {
             if (email == null || email.isEmpty()){
                 log.error("Email is null or empty: {}", email);
+                failedAddresses.add(email);
+                failedEmails++;
                 continue;
             }
 
@@ -61,5 +66,6 @@ public class MailSenderService {
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(text);
+        mailSender.send(message);
     }
 }

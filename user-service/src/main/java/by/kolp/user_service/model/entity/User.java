@@ -3,10 +3,7 @@ package by.kolp.user_service.model.entity;
 
 import by.kolp.user_service.model.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,7 +13,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -30,25 +27,30 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
+    @NonNull
     @Column(nullable = false, unique = true, length = 40)
     private String username;
 
-
+    @NonNull
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
+    @NonNull
     @Column(nullable = false, length = 100)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role = Role.USER;
+
     @CreationTimestamp
     @Column(nullable = false, name = "created_at", updatable = false)
     private Instant createdAt;
+
     @UpdateTimestamp
     @Column(nullable = false, name = "updated_at")
     private Instant updatedAt;
+
     @UpdateTimestamp
     @Column(nullable = false)
     private Instant lastLoginAt;

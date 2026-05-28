@@ -22,7 +22,7 @@ import java.util.List;
 public class UserClientService {
 
     private final RestTemplate restTemplate;
-    private final static String user_url = "http://user-service:8081";
+    private final static String user_url = "http://user-service:8082";
 
     @CircuitBreaker(name = "backendA")
     public Page<String> findAllEmails(Pageable pageable) {

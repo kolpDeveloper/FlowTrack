@@ -1,17 +1,15 @@
 package by.kolp.financeservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "Transactions")
 @Entity
@@ -21,12 +19,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NonNull
     @Column(nullable = false, length = 300)
     private String description;
 
+    @NonNull
     @Column(name = "amount")
-    private Double amount;
-
-    @Column()
+    private BigDecimal amount;
+    
     private Instant timestamp;
 }

@@ -8,7 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +24,14 @@ import java.util.UUID;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@ComponentScan("by.kolp.commonexceptions.util")
-public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
+public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter implements Ordered {
 
     private final JWTUtils jwtUtils;
+
+    @Order(Ordered.HIGHEST_PRECEDENCE + 10)
+    public GatewayHeaderAuthenticationFilter gatewayHeaderAuthenticationFilter() {
+        return new GatewayHeaderAuthenticationFilter(jwtUtils);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -56,5 +61,10 @@ public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE + 10;
     }
 }

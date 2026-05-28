@@ -61,7 +61,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserRegistrationDTO register(@RequestBody @Valid UserCreatingRequestDTO request) {
         log.info("Created username: {}", request.username());
-        return registrationService.register(request);
+        return registrationService.register(request); //todo 400 badrequest
     }
 
     @PatchMapping(EDIT_USER)
