@@ -57,11 +57,16 @@ public class UserController {
     }
 
 
+    /*
+    * пример запроса,  {"username": "example",
+  "email": "example@example.com",
+  "password": "securePass123"}
+    * */
     @PostMapping(CREATE_USER)
     @ResponseStatus(HttpStatus.CREATED)
     public UserRegistrationDTO register(@RequestBody @Valid UserCreatingRequestDTO request) {
         log.info("Created username: {}", request.username());
-        return registrationService.register(request); //todo 400 badrequest
+        return registrationService.register(request);
     }
 
     @PatchMapping(EDIT_USER)
