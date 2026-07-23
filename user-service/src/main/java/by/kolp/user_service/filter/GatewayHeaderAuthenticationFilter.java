@@ -1,7 +1,7 @@
-package by.kolp.financeservice.filter;
+package by.kolp.user_service.filter;
 
 import by.kolp.commonexceptions.util.JWTUtils;
-import by.kolp.financeservice.dto.UserPrincipal;
+import by.kolp.user_service.model.dto.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

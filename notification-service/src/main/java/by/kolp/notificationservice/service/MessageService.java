@@ -32,7 +32,7 @@ public class MessageService {
     @Value("${spring.mail.from}")
     private String from;
 
-    @CircuitBreaker(name = "backendA")
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallBackMethodThrow")
     public EmailSendingResult sendHtmlMessage(String subject, String htmlContent) {
         int page = 0;
         int size = 30;
@@ -89,6 +89,13 @@ public class MessageService {
                 .failedAddress(failedAddress)
                 .failedEmail(failedEmail)
                 .successfulEmail(successfulEmail)
+                .build();
+    }
+
+    private EmailSendingResult fallBackMethodThrow(String subject, String htmlContent, Throwable throwable) {
+        log.error("Failed to send HTML content. Subject: {}", subject, throwable);
+        return EmailSendingResult.builder()
+                .message("Error is result for sending content.")
                 .build();
     }
 }

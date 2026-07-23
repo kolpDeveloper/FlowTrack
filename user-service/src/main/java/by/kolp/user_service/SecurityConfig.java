@@ -1,6 +1,6 @@
 package by.kolp.user_service;
 
-import by.kolp.commonexceptions.filter.JwtAuthenticationFilter;
+import by.kolp.user_service.filter.GatewayHeaderAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,17 +15,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter filter;
+    private final GatewayHeaderAuthenticationFilter filter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-
-        //todo
         return http.build();
     }
 }
