@@ -39,6 +39,21 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flowtrack-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - user-service
+      - finance-service
+      - notification-service
+    networks:
+      - app-network
+    restart: unless-stopped
+
 
   notification-service:
     build:

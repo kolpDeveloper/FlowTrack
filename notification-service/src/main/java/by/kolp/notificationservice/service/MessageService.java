@@ -32,7 +32,7 @@ public class MessageService {
     @Value("${spring.mail.from}")
     private String from;
 
-    @CircuitBreaker(name = "backendA")
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallBackMethodThrow")
     public EmailSendingResult sendHtmlMessage(String subject, String htmlContent) {
         int page = 0;
         int size = 30;
@@ -90,5 +90,10 @@ public class MessageService {
                 .failedEmail(failedEmail)
                 .successfulEmail(successfulEmail)
                 .build();
+    }
+
+    private Page<String> fallBackMethodThrow(Pageable pagebale, Throwable throwable) {
+        log.error("Can't get email list from user-service:  ", throwable);
+        return Page.empty(pagebale);
     }
 }
