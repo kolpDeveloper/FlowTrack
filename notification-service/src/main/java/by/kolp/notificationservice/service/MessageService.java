@@ -92,8 +92,10 @@ public class MessageService {
                 .build();
     }
 
-    private Page<String> fallBackMethodThrow(Pageable pagebale, Throwable throwable) {
-        log.error("Can't get email list from user-service:  ", throwable);
-        return Page.empty(pagebale);
+    private EmailSendingResult fallBackMethodThrow(String subject, String htmlContent, Throwable throwable) {
+        log.error("Failed to send HTML content. Subject: {}", subject, throwable);
+        return EmailSendingResult.builder()
+                .message("Error is result for sending content.")
+                .build();
     }
 }
