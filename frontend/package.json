@@ -1,0 +1,9 @@
+{
+  "name": "flowtrack-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/main.js && node --check src/services/api.js"
+  }
+}
