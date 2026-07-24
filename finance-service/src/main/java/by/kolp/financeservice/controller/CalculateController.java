@@ -38,13 +38,13 @@ public class CalculateController {
     }
 
     @DeleteMapping(DELETE_VALUE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete_value(@PathVariable UUID id) {
         numericDataEntryService.deleteById(id);
     }
 
     @GetMapping(GET_VALUE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public Long getTotalSum() {
         log.info("Getting total sum....");
         return numericDataEntryService.getTotalSum();
