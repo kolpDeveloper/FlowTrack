@@ -26,14 +26,14 @@ public class CalculateController {
     @GetMapping(GET_BY_USER_ID)
     @ResponseStatus(HttpStatus.OK)
     public List<NumericDataEntryDTO> getByUserId(@PathVariable UUID userId) {
-        log.info("Getting numeric data entries for user with id {}", userId);
+        log.info("Getting numeric data entries....");
         return numericDataEntryService.findByUserId(userId);
     }
 
     @PostMapping(CREATE_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create_value(@RequestBody @Valid NumericDataEntryDTO numericDataEntryDTO) {
-        log.info("Creating new value for {}", numericDataEntryDTO);
+        log.info("Creating new value......");
         numericDataEntryService.createNumericDataEntry(numericDataEntryDTO);
     }
 
@@ -46,7 +46,7 @@ public class CalculateController {
     @GetMapping(GET_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Long getTotalSum() {
-        log.info("Getting total sum");
+        log.info("Getting total sum....");
         return numericDataEntryService.getTotalSum();
     }
 }

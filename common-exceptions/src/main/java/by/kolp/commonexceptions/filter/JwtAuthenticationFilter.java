@@ -7,9 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,12 +23,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final CommonJWTUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil, userDetailsService);
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -64,7 +56,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     log.debug("User {} successfully authenticated", username);
                 } else {
-                    log.debug("User {} validated by token, but no UserDetailsService provided for full authentication", username);
+
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+
+                    usernamePasswordAuthenticationToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+                    log.debug("User {} authenticated via token without authorities (no UserDetailsService provided)", username);
+
                 }
             }
         } catch (Exception e) {
