@@ -1,4 +1,16 @@
 services:
+  nginx:
+    image: nginx:latest
+    ports:
+     - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-gateway
+    networks:
+      - app-network
+
+
   # ========== Eureka Server ==========
   eureka-server:
     build:
@@ -149,16 +161,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5433:5432"
-      volumes:
+    volumes:
         - postgres-data:/var/lib/postgresql/data
         - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-      healthcheck:
+    healthcheck:
         test: [ "CMD-SHELL", "pg_isready -U postgres -d flow-track" ]
         interval: 5s
         timeout: 5s
         retries: 10
         start_period: 10s
-      networks:
+    networks:
         - app-network
 
   rabbitmq:
