@@ -3,8 +3,8 @@ spring:
     name: user-service
   datasource:
     url: jdbc:postgresql://postgres:5432/flow-track
-    username: postgres
-    password: postgres
+    username: ${POSTGRES_USER:-postgres}
+    password: ${POSTGRES_PASSWORD:-postgres}
 
   jpa:
     hibernate:
@@ -27,7 +27,7 @@ server:
   port: 8082
 
 jwt:
-  secret: ${JWT_SECRET:HEREWEGO}
+  secret: ${JWT_SECRET}
   expiration: 7d
 
 resilience4j.circuitbreaker:

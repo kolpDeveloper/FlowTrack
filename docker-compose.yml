@@ -1,4 +1,16 @@
 services:
+  nginx:
+    image: nginx:latest
+    ports:
+     - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-gateway
+    networks:
+      - app-network
+
+
   # ========== Eureka Server ==========
   eureka-server:
     build:
@@ -30,7 +42,7 @@ services:
     networks:
       - app-network
     environment:
-      - JWT_SECRET=${JWT_SECRET:?Error}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://api-gateway:8087/ || exit 1"]
       interval: 20s
@@ -74,9 +86,9 @@ services:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/notification_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - JWT_SECRET=${JWT_SECRET?Error not found env}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
@@ -108,10 +120,10 @@ services:
         condition: service_started
     environment:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user_db
-        - SPRING_DATASOURCE_USERNAME=postgres
-        - SPRING_DATASOURCE_PASSWORD=postgres
+        - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
+        - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-        - JWT_SECRET=${JWT_SECRET?Error not found env}
+        - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
         - SPRING_REDIS_HOST=redis
         - SPRING_REDIS_PORT=6379
     networks:
@@ -132,9 +144,9 @@ services:
           condition: service_healthy
       environment:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/finance_db
-        - SPRING_DATASOURCE_USERNAME=postgres
-        - SPRING_DATASOURCE_PASSWORD=postgres
-        - JWT_SECRET=${JWT_SECRET?Error not found env}
+        - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
+        - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+        - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
         - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
         - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
       networks:
@@ -142,24 +154,23 @@ services:
       restart: unless-stopped
 
   postgres:
-      image: postgres:15-alpine
-      environment:
-        POSTGRES_DB: flow-track
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_HOST_AUTH_METHOD: trust
-      ports:
-        - "5433:5432"
-      volumes:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: flow-track
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5433:5432"
+    volumes:
         - postgres-data:/var/lib/postgresql/data
         - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-      healthcheck:
+    healthcheck:
         test: [ "CMD-SHELL", "pg_isready -U postgres -d flow-track" ]
         interval: 5s
         timeout: 5s
         retries: 10
         start_period: 10s
-      networks:
+    networks:
         - app-network
 
   rabbitmq:
